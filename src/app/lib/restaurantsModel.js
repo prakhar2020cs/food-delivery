@@ -4,6 +4,7 @@ const restaurantModel = new mongoose.Schema({
     name: { type: String },
     email: { type: String  },
     city: { type: String  },
+    password: { type: String  },
     address: { type: String },
     contact: { type: String  },
 })
