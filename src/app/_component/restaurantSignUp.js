@@ -13,13 +13,13 @@ const Signup = () => {
   const [contact, setContact] = useState("");
 
   async  function handleSignup(e){
-//  e.preventDefault();
-    console.log(email, password, address, city);
+  e.preventDefault();
+  console.log(email, password, address, city);
 
-    let result = await fetch("/api/restaurant",{
+  let result = await fetch("/api/restaurant",{
       method:"POST",
      
-      body:JSON.stringify({email,password,city,address,contact})
+      body:JSON.stringify({name,email,password,city,address,contact})
     });
     result = await result.json();
     console.log(result);

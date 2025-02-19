@@ -12,5 +12,9 @@ console.log(data)
 
 export async function POST(request){
     let payload = await request.json();
-    return NextResponse.json({result:payload})
+    console.log(payload)
+ await mongoose.connect(connectionStr,{useNewUrlParser:true});
+ let restaurant = new restaurantSchema(payload);
+ const result = await restaurant.save()
+    return NextResponse.json({result,success:true})
 }
