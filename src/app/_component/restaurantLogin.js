@@ -8,16 +8,24 @@ const Login = ({setLogin}) => {
 
   const [userEmail, setEmail] = useState('');
   const [userPassword, setPassword] = useState('');
+  // let [tokenToVerify, setTokenToVerify] = useState(null);
   const router = useRouter();
+let tokenToVerify = null;
 
-  let tokenToVerify = JSON.parse(localStorage.getItem("registeredUser"));
 
   useEffect(() => {
+    let storedUser = localStorage.getItem("registeredUser");
+    console.log("storedUser",storedUser);
+    const parsedtoken = JSON.parse(storedUser);
+tokenToVerify = parsedtoken?.token;
+         console.log("tokenToverify---login page",tokenToVerify)
     const verifyToken = async () => {
+     
+
       console.log("verifying token...")
       try {
        
-        tokenToVerify = tokenToVerify?.token;
+     
 
         if (!tokenToVerify) {
           console.log("NO token found");
@@ -37,7 +45,7 @@ const Login = ({setLogin}) => {
         if (response.success) {
           console.log("user token is valid");
 
-          router.push("/dashboard");
+          // router.push("/dashboard");
         }
 
       } catch (error) {

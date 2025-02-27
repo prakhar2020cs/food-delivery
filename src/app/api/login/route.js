@@ -7,7 +7,7 @@ import jwt from 'jsonwebtoken';
 export async function POST(request) {
 
 
-
+console.log("post-req-login")
 
   const { userEmail, userPassword, tokenToVerify } = await request.json();
 
@@ -16,6 +16,8 @@ export async function POST(request) {
     console.log("token", tokenToVerify)
     try {
       const decoded = jwt.verify(tokenToVerify, process.env.JWT_SECRET); // Verify the token
+
+      console.log("decoded", decoded)
       return NextResponse.json({ message: "Token is valid", user: decoded, success: true });
     } catch (err) {
       return NextResponse.json({ message: "Invalid or expired token", success: false }, { status: 401 });

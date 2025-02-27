@@ -25,9 +25,7 @@ const Dashboard = () => {
   const [newdish, setNewDish] = useState();
 
 
-  useEffect(() => {
-    console.log("dishes : ", dishes)
-  }, [dishes])
+
   
 
 
@@ -60,7 +58,7 @@ const Dashboard = () => {
     };
 
     fetchDishes();
-console.log("dishes",dishes)
+
 
 
   }, []);
@@ -71,12 +69,14 @@ console.log("dishes",dishes)
 
   // Update user details
   const updateUser = async () => {
-    const res = await fetch("api/crud/user", {
+    let res = await fetch("api/crud/user", {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ token, name, email, city, restaurant }),
     });
-    return res.json();
+   res = await res.json()
+    console.log( "updateUserResponse", res);
+    return res;
   };
 
   // Delete a user
@@ -106,7 +106,12 @@ console.log("dishes",dishes)
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({   _id:dish._id , itemId:dish.itemId, name: dish.name, description: dish.description }),
       });
-      return res.json();
+
+let updatedDish =  await res.json();
+console.log("updated Dish", updatedDish);
+updatedDish.success? alert("Dish updated"): alert("error updating dishes");
+
+      return updatedDish;
     };
 
 
@@ -127,7 +132,7 @@ console.log("dishes",dishes)
       setCity("");
       setToken("");
       setRestaurant("");
-      return res.json();
+      return await res.json();
     };
 
     return (
@@ -137,7 +142,7 @@ console.log("dishes",dishes)
         <h2> Welcome to your Restraunt Dashboard</h2>
         <h3>User Details</h3>
         <div className="userDetail">
-          {editmode ? <input value={email} onChange={(e) => setEmail(e.target.value)} /> : <p>{email}</p>}
+          {false ? <input value={email} onChange={(e) => setEmail(e.target.value)} /> : <p>{email}</p>}
           {editmode ? <input value={name} onChange={(e) => setName(e.target.value)} /> : <p>{name}</p>}
           {editmode ? <input value={city} onChange={(e) => setCity(e.target.value)} /> : <p>{city}</p>}
           {editmode ? <input value={restaurant} onChange={
@@ -154,7 +159,7 @@ console.log("dishes",dishes)
 
             Edit
           </button>
-          {console.log(updateUser)}
+        
           <button onClick={async () => {
             try {
               const response = await updateUser();
@@ -183,10 +188,7 @@ console.log("dishes",dishes)
         </div>
         <h3>Dishes In Your Menu</h3>
         <div className="userDishes">
-          
-      {
-          console.log( "dishes",dishes)
-      }
+    
          { 
        
         dishes.length===0 ? ( <p>Loading Dishes...</p> ): (dishes && dishes.length > 0 && dishes.map(

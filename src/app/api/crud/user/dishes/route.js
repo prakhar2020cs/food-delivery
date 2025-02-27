@@ -16,6 +16,8 @@ export async function GET() {
 
 export async function PUT(req) {
 
+
+
   try{
     await mongoose.connect(connectionStr);
 
@@ -31,7 +33,7 @@ return NextResponse.json({message:"there is error connecting to database", succe
         { itemId ,name, description},
         {new:true}
       );
-      return NextResponse.json(dishes, { status: 200 });
+      return NextResponse.json({dishes, success: true} ,{ status: 200 });
     } catch (error) {
       return NextResponse.json({ message: "Error fetching dishes", error }, { status: 500 });
     }

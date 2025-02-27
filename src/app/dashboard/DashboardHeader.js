@@ -12,33 +12,51 @@ import style from "./DashboardHeader.module.css";
 const DashboardHeader = () => {
  
 let [userDetails, setUserDetails] = useState();
+
   const router = useRouter();
   const pathName = usePathname();
-  let data = localStorage.getItem("registeredUser");
+ 
 
+let tokenToVerify = null;
 
+useEffect(
+  ()=>{
 
-  // useEffect(() => {
+    let token = JSON.parse(localStorage.getItem("registeredUser"))?.token;
+    console.log("dashboard header token useeffect", token)
+   tokenToVerify = token;
 
+    async function checkToken () {
+      if(!tokenToVerify){
+        router.push("/restaurant");
+      }
 
-  //   if (data && pathName == "/restaurant") {
-  //     router.push("/dashboard")
+      console.log("check token-dashboarHeader", tokenToVerify)
+     
+     let tokenVerify = await fetch("/api/login",
+      {
+        method: "GET",
+      headers: { "Content-Type": "application/json", "auth-token": `${tokenToVerify}` },
+     
+      
+      }
+     );
 
+      const res = await tokenVerify.json();
+console.log("dashboard-header use effect",res)
+      if (res.success) {
+        console.log("user token is valid");
 
-  //   } else {
-  //     setUserDetails(JSON.parse(data));
-  //     console.log("userDetails:", userDetails);
-  //     console.log("setUserDetails:", setUserDetails);
-  //   }
-  // }, []);
+       
+      }else{
+        router.push("/restaurant")
+      }
 
-  // useEffect(() => {
-  //   if (!data && pathName == "/dashboard") {  //if user tries to jump to dashboard without registeing
-  //     router.push("/restaurant");
-  //   }
+    }
 
-
-  // }, [userDetails])
+    checkToken()
+  }
+,[])
 
 
 
