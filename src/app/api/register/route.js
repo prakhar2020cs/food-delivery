@@ -58,6 +58,11 @@ export async function POST(request) {
       console.log("MongoDb connection error", error);
 return NextResponse.json({message:"there is error connecting to database", success:"false"});
     }
+    // const indexes = await mongoose.connection.db.collection("restaurants").indexes();
+    // console.log("Indexes:", indexes);
+    // await mongoose.connection.db.collection("restaurants").dropIndex("token_1");
+    // console.log("Unique index on forgetpasswordtoken removed!");
+
     let restaurant = new restaurantSchema(payload);
     const result = await restaurant.save();
     console.log("result full data", result);

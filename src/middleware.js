@@ -1,30 +1,27 @@
 import { NextResponse } from 'next/server';
 import jwt from 'jsonwebtoken';
 
-export function middleware(req) {
-    console.log("middleware----------");
-    // Get token from cookies or headers
-    const token = req.headers.get("auth-token"); //
-    console.log(token)
-    if (token) {
-        console.log("token-middleware",token);
-        try {
-          const decoded = jwt.verify(token, process.env.JWT_SECRET); // Verify the token
-          return NextResponse.next();
-        } catch (err) {
-            return NextResponse.redirect(new URL('/restaurant', req.url));
-        }
-      }
-  else{
+const JWT_SECRET = process.env.JWT_SECRET || 'your_secret_key';
 
-    console.log("middleware----------");
-        return NextResponse.redirect(new URL('/restaurant', req.url));
+export function middleware(request) {
+    console.log("middleware-------")
+    const token = request.cookies.get('token')?.value;
+console.log(token);
+    // If no token, redirect to login
+    if (!token) {
+        return NextResponse.redirect(new URL('/restaurant', request.url));
     }
 
-   
+    try {
+        jwt.verify(token, JWT_SECRET); // Verify the JWT token
+    } catch (error) {
+        return NextResponse.redirect(new URL('/restaurant', request.url));
+    }
+
+    return NextResponse.next();
 }
 
-// Apply middleware only to the `/dashboard` route and its subroutes
+// Apply middleware **only** to protected routes
 export const config = {
-    matcher: ['/dashboard/:path*', '/api/login']
+    matcher: ['/dashboard/:path*'],
 };

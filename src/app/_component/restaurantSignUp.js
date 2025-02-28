@@ -29,9 +29,7 @@ const Signup = ({setLogin}) => {
     return null; // No errors
   };
 
-if(localStorage.getItem("registeredUser")){
-setLogin(true);
-}
+
 
   async function handleSignup(e) {
     e.preventDefault();

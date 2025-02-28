@@ -18,7 +18,7 @@ const restaurant = () =>{
         <RestaurantHeader/>
         <h1>Restaurant</h1>
      
-        {login? <Login setLogin={setLogin} />: <Signup setLogin={setLogin}/>}
+        {login? <Login  />: <Signup />}
         <button className="loginSignup"  onClick={()=>setLogin(!login)}>{login?"Do not have account? Signup":"Already have an account? login "}</button>
 <RestaurantFooter/>
         </div>

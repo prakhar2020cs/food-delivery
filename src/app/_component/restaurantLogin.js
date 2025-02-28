@@ -3,8 +3,9 @@
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import style from "./restaurant.module.css";
+import Link from "next/link";
 
-const Login = ({setLogin}) => {
+const Login = () => {
 
   const [userEmail, setEmail] = useState('');
   const [userPassword, setPassword] = useState('');
@@ -21,7 +22,6 @@ tokenToVerify = parsedtoken?.token;
          console.log("tokenToverify---login page",tokenToVerify)
     const verifyToken = async () => {
      
-
       console.log("verifying token...")
       try {
        
@@ -33,6 +33,9 @@ tokenToVerify = parsedtoken?.token;
           return;
         }
         console.log("check2")
+        fetch("/dashboard", {
+          method: "GET"
+        })
 
         let tokenVerify = await fetch("/api/login", {
           method: "POST",
@@ -45,7 +48,7 @@ tokenToVerify = parsedtoken?.token;
         if (response.success) {
           console.log("user token is valid");
 
-          // router.push("/dashboard");
+          router.push("/dashboard");
         }
 
       } catch (error) {
@@ -111,10 +114,10 @@ tokenToVerify = parsedtoken?.token;
           </label>
         </div>
 
-        {/* <div className={style.container} >
+        <div className={style.container} >
           <button type="button" className="cancelbtn">Cancel</button>
-          <span className="psw">Forgot <a href="#">password?</a></span>
-        </div> */}
+          <span className="psw"> <Link href="/forgotpassword">Forgot password?</Link></span>
+        </div>
       </form>
 
     </div>
