@@ -1,4 +1,5 @@
 "use client"
+import Cookies from 'js-cookie';
 
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
@@ -11,36 +12,46 @@ const Login = () => {
   const [userPassword, setPassword] = useState('');
   // let [tokenToVerify, setTokenToVerify] = useState(null);
   const router = useRouter();
-let tokenToVerify = null;
+  let tokenToVerify = null;
 
 
   useEffect(() => {
+    console.log("use effect")
     let storedUser = localStorage.getItem("registeredUser");
-    console.log("storedUser",storedUser);
+    console.log("storedUser", storedUser);
     const parsedtoken = JSON.parse(storedUser);
-tokenToVerify = parsedtoken?.token;
-         console.log("tokenToverify---login page",tokenToVerify)
+    tokenToVerify = parsedtoken?.token;
+    console.log("tokenToverify---login page", tokenToVerify);
+
+    // if no token st
+ 
     const verifyToken = async () => {
-     
+
+         if (Cookies.get("token")) {
+      console.log("signup-token, redirected to dashboard")
+      router.replace("/dashboard")
+    }
+
+
       console.log("verifying token...")
       try {
-       
-     
+
+
 
         if (!tokenToVerify) {
           console.log("NO token found");
-         
+
           return;
         }
         console.log("check2")
-        fetch("/dashboard", {
-          method: "GET"
-        })
-
+      
         let tokenVerify = await fetch("/api/login", {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ tokenToVerify: tokenToVerify })
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${tokenToVerify}`,
+          },
+          // body: JSON.stringify({ tokenToVerify: tokenToVerify })
         });
 
         const response = await tokenVerify.json();
@@ -72,7 +83,7 @@ tokenToVerify = parsedtoken?.token;
     }
 
     e.preventDefault();
-    let result = await fetch(`/api/login`, {
+    let result = await fetch('/api/login', {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ userEmail, userPassword })
@@ -83,9 +94,18 @@ tokenToVerify = parsedtoken?.token;
       const { userData, token } = response;
       console.log(userData, token);
       localStorage.setItem("registeredUser", JSON.stringify({ userData, token }));
+      Cookies.set("token", JSON.stringify({ token }), {
+        expires: 7, // Cookie expires in 7 days
+
+        sameSite: 'strict' // Protect against CSRF
+      });
+
+
       router.push("/dashboard");
 
-    }else{
+
+
+    } else {
       window.alert("invalid user");
     }
 
@@ -114,8 +134,8 @@ tokenToVerify = parsedtoken?.token;
           </label>
         </div>
 
-        <div className={style.container} >
-          <button type="button" className="cancelbtn">Cancel</button>
+        <div className={style.container}>
+
           <span className="psw"> <Link href="/forgotpassword">Forgot password?</Link></span>
         </div>
       </form>

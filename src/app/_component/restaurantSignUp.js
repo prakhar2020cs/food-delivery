@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import style from "./restaurant.module.css";
+import { toast, ToastContainer } from "react-toastify";
+import Cookies from "js-cookie";
 
 
 
@@ -17,28 +19,39 @@ const Signup = ({setLogin}) => {
   const [contact, setContact] = useState("");
   const [error, setError] = useState("");
 
+
+  const [isLoading, setIsLoading] = useState(false); 
+
   const router = useRouter();
+
+  if(Cookies.get("token")){
+    console.log("signup-token, redirected to dashboard")
+router.replace("/dashboard")
+  }
 
    // Function to validate inputs
    const validateForm = () => {
     if (name.length < 3) return "Name must be at least 3 characters long.";
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return "Invalid email format.";
-    if (password.length < 6 ) return "Password must be at least 6 characters long.";
+    if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(password)) return "Password should be At least one uppercase, one lowercase, one digit, one special char, and 8+ characters";
     if( password !== c_password) return "Password does not match Confirm-Password";
-  
+    if (!/^\d{10}$/.test(contact)) return "contact should be of 10 length";
+    if (address.length < 6 ) return "Address must be at least 6 characters long.";
+
     return null; // No errors
   };
 
 
 
   async function handleSignup(e) {
+   
     e.preventDefault();
 const errorMessage = validateForm();
 if(errorMessage){
   setError(errorMessage);
   return;
 }
-
+setIsLoading(true);
     let result = await fetch("/api/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -47,15 +60,27 @@ if(errorMessage){
     let response = await result.json();
 
     console.log("response", response);
+
     
     if (response.success) {
-      const { result } = response;
-      delete result.password;
-      console.log("resultWOpass", result);
+      const { message } = response;
+      // delete result.password;
+      // console.log("resultWOpass", result);
       // localStorage.setItem("registeredUser", JSON.stringify(result));
-      window.alert("You are registered, kindly login")
+      // alert(message);
+    
+      toast.success("You are registered, kindly login");
+      setTimeout(()=>{setLogin(true)},3000)
+   
+   
       // router.push('/dashboard');
     }
+
+    // if error
+    const{message} = response;
+    setIsLoading(false);
+    toast.error(message);
+
 
   }
 
@@ -64,6 +89,7 @@ if(errorMessage){
 
   return (
     <>
+    <ToastContainer/>
       <h2>Signup</h2>
       <form className={style.signUp} >
         <div className={style.imgContainer}>
@@ -161,19 +187,24 @@ if(errorMessage){
             name="contact"
             value={contact}
             onChange={(event) => setContact(event.target.value)}
+            required maxlength="10"
           // required
           />
              {error && <p style={{ color: "blue" }}>{error}</p>}
 
-          <button onClick={handleSignup}>SignUp</button>
-          <label>
+          <button onClick={handleSignup}
+          disabled = {isLoading}
+          >
+            {isLoading? "Signing Up...":"Sign Up"}
+            </button>
+          {/* <label>
             <input
               type="checkbox"
               defaultChecked="defaultChecked"
               name="remember"
             />{" "}
             Remember me
-          </label>
+          </label> */}
         </div>
 
         {/* <div className={style.container}>

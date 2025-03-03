@@ -3,14 +3,18 @@ import { connectionStr } from "@/app/lib/db";
 import { restaurantSchema } from "@/app/lib/restaurantsModel";
 import mongoose from "mongoose";
 import jwt from 'jsonwebtoken';
+import { dbConnect } from '@/app/lib/dbConnect';
 
 export async function POST(request) {
 
 
-console.log("post-req-login")
+console.log("request data",request)
 
-  const { userEmail, userPassword, tokenToVerify } = await request.json();
-
+ 
+const authHeader = request.headers.get("Authorization");
+console.log("auth",authHeader);
+const tokenToVerify = authHeader?.split(" ")[1]; 
+console.log("tokenToVerify---",tokenToVerify);
   // If a token is provided, verify it
   if (tokenToVerify) {
     console.log("token", tokenToVerify)
@@ -18,18 +22,20 @@ console.log("post-req-login")
       const decoded = jwt.verify(tokenToVerify, process.env.JWT_SECRET); // Verify the token
 
       console.log("decoded", decoded)
-      return NextResponse.json({ message: "Token is valid", user: decoded, success: true });
+      return NextResponse.redirect(new URL('/dashboard', request.url));
+
     } catch (err) {
       return NextResponse.json({ message: "Invalid or expired token", success: false }, { status: 401 });
     }
   }
-
-  try {
-    await mongoose.connect(connectionStr, { serverSelectionTimeoutMS: 10000});
-  } catch (error) {
-    console.error("MongoDB Connection Error:---->", error);
-    return NextResponse.json({ message: "Database connection failed", success: false }, { status: 500 });
+  else{
+    console.log("token not get")
   }
+
+  const { userEmail, userPassword} = await request.json();
+ await dbConnect();
+
+ 
 
 
   let userData = await restaurantSchema.findOne({ email: userEmail, password: userPassword });
@@ -61,7 +67,7 @@ console.log("post-req-login")
 
       // Set JWT token in an httpOnly, secure cookie
       response.cookies.set('token', token, {
-        httpOnly: true, // Prevent client-side JavaScript access
+   
         secure: process.env.NODE_ENV === 'production', // HTTPS only in production
         sameSite: 'lax', // Prevent CSRF attacks
         maxAge: 60 * 60 * 24, // 1 day

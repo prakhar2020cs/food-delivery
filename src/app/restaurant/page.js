@@ -15,10 +15,10 @@ const restaurant = () =>{
 
     return(
         <div className="restaurant-container">
-        <RestaurantHeader/>
+        <RestaurantHeader setLogin = {setLogin} login = {login}/>
         <h1>Restaurant</h1>
      
-        {login? <Login  />: <Signup />}
+        {login? <Login  />: <Signup setLogin={setLogin} />}
         <button className="loginSignup"  onClick={()=>setLogin(!login)}>{login?"Do not have account? Signup":"Already have an account? login "}</button>
 <RestaurantFooter/>
         </div>

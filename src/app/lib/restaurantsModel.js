@@ -8,8 +8,9 @@ const restaurantModel = new mongoose.Schema({
     password: { type: String , required:true },
     address: { type: String },
     contact: { type: String  },
-    token: { type: String , unique:true },
+    token: { type: String ,default:null },
     forgetpasswordtoken: { type: String ,default:null},
 })
 
 export const restaurantSchema = mongoose.models.restaurants || mongoose.model("restaurants", restaurantModel);
+

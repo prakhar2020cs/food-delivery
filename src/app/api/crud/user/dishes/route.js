@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import dishSchema from "/src/app/lib/dishesModel";
 import { NextResponse } from "next/server";
 import { connectionStr } from "@/app/lib/db";
+import { dbConnect } from "@/app/lib/dbConnect";
 
 export async function GET() {
     try {
@@ -38,6 +39,47 @@ return NextResponse.json({message:"there is error connecting to database", succe
       return NextResponse.json({ message: "Error fetching dishes", error }, { status: 500 });
     }
   }
+
+  export async function POST(req) {
+
+ 
+
+
+await dbConnect();
+const {email} = await req.json();
+
+if(email){
+  try {
+    const dishes = await dishSchema.find({email})
+    ;
+    console.log("dishes---", dishes);
+    return NextResponse.json({dishes , success:true},{status:200});
+  } catch (error) {
+    return NextResponse.json({message: "error getting dishes" , success:false},{status:500})
+  }
+ 
+
+
+}
+
+      try {
+      
+   console.log("--new dish----")
+let newDish = await req.json();
+console.log("--new dish", newDish);
+    let dish = new dishSchema(newDish);
+  
+    const result = await dish.save();
+    console.log("new saved dish", result);
+       
+        return NextResponse.json({result, success: true} ,{ status: 200 });
+      } catch (error) {
+        console.log(error);
+        return NextResponse.json({ message: "Error creating dishes", error }, { status: 500 });
+      }
+    }
+
+  
 
 
 //   try{

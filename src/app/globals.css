@@ -133,3 +133,8 @@ input{
     flex-direction: column;
     gap: 20px;
 }
+
+button:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }

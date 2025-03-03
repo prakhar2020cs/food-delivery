@@ -54,19 +54,32 @@ export async function POST(request) {
     try{
       await mongoose.connect(connectionStr);
 
+//       await restaurantSchema.syncIndexes();
+// console.log("Indexes synced successfully!");
+      // await restaurantSchema.collection.createIndex({ email: 1 }, { unique: true });
+      // console.log("Unique index on email created successfully!");
+      
+      // const indexes = await mongoose.connection.db.collection("restaurants").indexes();
+      // console.log("Indexes:", indexes);
+
+      // await mongoose.connection.db.collection("restaurants").dropIndex("email_1");
+      // console.log("Unique index on forgetpasswordtoken removed!");
+  
+      let restaurant = new restaurantSchema(payload);
+  
+    const result = await restaurant.save();
+ 
+    console.log("result full data", result);
+    return NextResponse.json({ message:"user registered", success: true })
+
     }catch(error){
       console.log("MongoDb connection error", error);
-return NextResponse.json({message:"there is error connecting to database", success:"false"});
+return NextResponse.json({message:"user already exists", success:false});
+
     }
-    // const indexes = await mongoose.connection.db.collection("restaurants").indexes();
-    // console.log("Indexes:", indexes);
-    // await mongoose.connection.db.collection("restaurants").dropIndex("token_1");
-    // console.log("Unique index on forgetpasswordtoken removed!");
+  
+    
+// console.log("last")
 
-    let restaurant = new restaurantSchema(payload);
-    const result = await restaurant.save();
-    console.log("result full data", result);
-
-
-    return NextResponse.json({ result, success: true })
+//     return NextResponse.json({  success: true })
 }

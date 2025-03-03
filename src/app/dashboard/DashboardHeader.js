@@ -3,6 +3,8 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import style from "./DashboardHeader.module.css";
+import Cookies from 'js-cookie';
+
 
 
 
@@ -11,7 +13,7 @@ import style from "./DashboardHeader.module.css";
 
 const DashboardHeader = () => {
  
-let [userDetails, setUserDetails] = useState();
+let [userDetails, setUserDetails] = useState("");
 
   const router = useRouter();
   const pathName = usePathname();
@@ -22,9 +24,14 @@ let tokenToVerify = null;
 useEffect(
   ()=>{
 
-    let token = JSON.parse(localStorage.getItem("registeredUser"))?.token;
-    console.log("dashboard header token useeffect", token)
+    let token = Cookies.get("token");
+    if (!token) {
+      router.push("/restaurant");
+      return;
+    }
+   token = JSON.parse(token).token;
    tokenToVerify = token;
+   console.log("dashboard header token useeffect----", token)
 
     async function checkToken () {
       if(!tokenToVerify){
@@ -35,15 +42,17 @@ useEffect(
      
      let tokenVerify = await fetch("/api/login",
       {
-        method: "GET",
-      headers: { "Content-Type": "application/json", "auth-token": `${tokenToVerify}` },
+        method: "POST",
+      headers: { "Content-Type": "application/json", "Authorization": `Bearer ${tokenToVerify}`,},
      
       
       }
      );
-
-      const res = await tokenVerify.json();
-console.log("dashboard-header use effect",res)
+    
+      let res = await tokenVerify.json();
+      console.log("dashboard-header use effect",res)
+  
+// console.log("dashboard-header use effect",res)
       if (res.success) {
         console.log("user token is valid");
 
@@ -64,22 +73,28 @@ console.log("dashboard-header use effect",res)
     localStorage.removeItem("registeredUser");
 
     setUserDetails('');
-    console.log("logout")
-    router.push("/restaurant");
+    Cookies.remove("token",  { path: "/" });
+    console.log("logout");
+    setTimeout(() => {
+      router.push("/restaurant");
+  }, 100);
+
+
+    // router.push("/restaurant");
 
   }
   return (<>
     {console.log("restaurant header2")}
     <div className={style.header}>
-      <Link href="#default" className={style.logo}>
+      <Link href="#" className={style.logo}>
         <img src="delivery-boy-logo.webp" alt="" /><span>FoodZilla</span>
       </Link>
       <div className={style.headerRight}>
-        <Link href="/restaurant">Home</Link>
+        {/* <Link href="/restaurant">Home</Link> */}
 
 
-        <Link href="#about">Profile</Link>
-        <Link href="#logout" onClick={logout} >Logout</Link>
+        {/* <Link  href="#" >Profile</Link> */}
+        <Link href="#" onClick={logout} >Logout</Link>
 
 
 
