@@ -8,7 +8,7 @@ export default function Home() {
 
 <div className={style.header}>
       <div className="logoContainer">
-        <Link href="/" className={style.logo}>
+        <Link href="#" className={style.logo}>
           <img src="delivery-boy-logo.webp" alt="" /><span>FoodZilla</span>
         </Link>
       </div>

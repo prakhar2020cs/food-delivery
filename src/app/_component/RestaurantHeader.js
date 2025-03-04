@@ -24,7 +24,7 @@ const RestaurantHeader = ({setLogin, login}) => {
     {console.log("restaurant header2")}
     <div className={style.header}>
       <div className="logoContainer">
-        <Link href="/" className={style.logo}>
+        <Link href="#" className={style.logo}>
           <img src="delivery-boy-logo.webp" alt="" /><span>FoodZilla</span>
         </Link>
       </div>

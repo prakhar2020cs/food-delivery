@@ -4,11 +4,15 @@ import { NextResponse } from "next/server";
 import { connectionStr } from "@/app/lib/db";
 import { dbConnect } from "@/app/lib/dbConnect";
 
-export async function GET() {
+export async function GET(req) {
+
+  await dbConnect();
+
     try {
-      await mongoose.connect(connectionStr);
-  
-      const dishes = await dishSchema.find({});
+     
+  const email = req.headers.get('email');
+  console.log("email---",email)
+      const dishes = await dishSchema.find({email});
       return NextResponse.json(dishes, { status: 200 });
     } catch (error) {
       return NextResponse.json({ message: "Error fetching dishes", error }, { status: 500 });
@@ -17,15 +21,9 @@ export async function GET() {
 
 export async function PUT(req) {
 
+await dbConnect();
 
-
-  try{
-    await mongoose.connect(connectionStr);
-
-  }catch(error){
-    console.log("MongoDb connection error", error);
-return NextResponse.json({message:"there is error connecting to database", success:"false"});
-  }
+ 
     try {
     
   const { _id ,itemId, name, description} = await req.json();

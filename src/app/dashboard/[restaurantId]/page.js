@@ -23,9 +23,7 @@ restaurantId =  decodeURIComponent(restaurantId);
 console.log(restaurantId)
 
   useEffect(() => {
-    const storedEmail = JSON.parse(localStorage.getItem("registeredUser"))?.userData.email;
-
-
+    const storedEmail = JSON.parse(localStorage.getItem("registeredUser"))?.userData?.email;
     if (!storedEmail) {
       router.replace("/login"); // Redirect if no email is stored
     } else if (storedEmail !== restaurantId) {

@@ -1,6 +1,8 @@
 "use client"
 
 
+import Cookies from 'js-cookie';
+import { useRouter } from 'next/navigation';
 import React from 'react';
 import { useState, useEffect } from 'react';
 import { toast, ToastContainer } from 'react-toastify';
@@ -10,16 +12,18 @@ import { toast, ToastContainer } from 'react-toastify';
 
 const Dashboard = () => {
 
+const router = useRouter();
 
+const [loading , setLoading] = useState(false);
 
-  let [editmode, setEditmode] = useState(false);
-  let [editDish, setEditDish] = useState(false);
-  let [email, setEmail] = useState('');
-  let [token, setToken] = useState('');
-  let [name, setName] = useState('');
-  let [city, setCity] = useState('');
-  let [restaurant, setRestaurant] = useState('');
-
+  const [editmode, setEditmode] = useState(false);
+  const [editDish, setEditDish] = useState(false);
+  const [email, setEmail] = useState('');
+ const [token, setToken] = useState('');
+  const [name, setName] = useState('');
+  const [city, setCity] = useState('');
+  const [restaurant, setRestaurant] = useState('');
+const [updated, setUpdated] = useState(false);
 
   const [dishes, setDishes] = useState([]);
   const [isNewDish, setIsNewDish] = useState(false);
@@ -30,62 +34,107 @@ const Dashboard = () => {
   });
 
 
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const userToken = Cookies.get("token");
+      if (userToken) {
+        setToken(userToken); // Set token
+      }
+    }
+  }, []);
+
+  useEffect(()=>{
+      // const token = Cookies.get("token");
+      // setToken(token);
+if(!token){
+  return
+}
+      const fetchDishes = async (userEmail) => {
+     console.log("user email--" ,userEmail)
+        try {
+          const response = await fetch("/api/crud/user/dishes",
+            {
+              method:"GET",
+              headers:{
+                "Content-Type": "application/json",
+                "email": userEmail  
+              }
+            }
+          ); // Call API
+          const data = await response.json();
+          console.log(data);
+          setDishes(data); // Store in state
+        } catch (error) {
+          console.error("Error fetching dishes:", error);
+        }
+      };
+      
+     
+
+      const fetchUser = async () =>{
+        setLoading(true);
+        let res = await fetch("/api/crud/user", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+          }
+        });
+   res = await res.json();
+   let userDetails = res.user;
+  console.log(userDetails);
+  
+  setEmail(userDetails.email || "");
+  setName(userDetails.name || "");
+  setCity(userDetails.city || "");
+  // setToken(data.token);
+  setRestaurant(userDetails.restaurant || "");
+  setLoading(false)
+
+  await fetchDishes(userDetails.email);
+
+  
+      }
+
+      fetchUser();
+      // fetchDishes();
+      
+    }
+  ,[token])
+
+  // 
+
+
+
+
+
+
+
+
+
+
+
+
+// Update user details
+const updateUser = async () => {
+  setEditmode(false)
+  setLoading(true)
+  console.log("update user")
+let res = await fetch("api/crud/user", {
+  method: "PUT",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ token, name, email, city, restaurant }),
+});
+res = await res.json();
+
+console.log( "updateUserResponse", res);
+setLoading(false)
+
+return res;
+};
 
   
 
-
-  useEffect( () => {
-    let data = localStorage.getItem("registeredUser");
-    data = JSON.parse(data);
-
-    console.log("dashboard data", data);
-
-
-    if (data) {
-      console.log("hello")
-      setEmail(data.userData.email);
-      setName(data.userData.name);
-      setCity(data.userData.city);
-      setToken(data.token);
-      setRestaurant(data.userData.restaurant);
-
-    }
-
-    const fetchDishes = async () => {
-      try {
-        const response = await fetch("/api/crud/user/dishes"); // Call API
-        const data = await response.json();
-        console.log(data);
-        setDishes(data); // Store in state
-      } catch (error) {
-        console.error("Error fetching dishes:", error);
-      }
-    };
-
-    fetchDishes();
-
-
-
-  }, []);
-
-
-
-
-
-  // Update user details
-  const updateUser = async () => {
-    let res = await fetch("api/crud/user", {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ token, name, email, city, restaurant }),
-    });
-   res = await res.json();
-   
-    console.log( "updateUserResponse", res);
-    return res;
-  };
-
-  // Delete a user
   const deleteUser = async () => {
     console.log("deleteUser");
     const res = await fetch("api/crud/user", {
@@ -93,14 +142,14 @@ const Dashboard = () => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ token }),
     });
-    setEmail("");
-    setName("");
-    setCity("");
-    setToken("");
-    setRestaurant("");
+    setEmail(null);
+    setName(null);
+    setCity(null);
+    setToken(null);
+    setRestaurant(null);
     setDishes([])
-    localStorage.removeItem("registeredUser");
-    Router.push("/restaurant");
+ Cookies.remove("token");
+    router.push("/restaurant");
   }
 
 
@@ -128,33 +177,6 @@ updatedDish.success? alert("Dish updated"): alert("error updating dishes");
       return updatedDish;
     };
 
-    const createDish = async (dish) =>{
-      console.log(dish);
-      const res = await fetch("api/crud/user/dishes", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({   itemId:newdish.itemId, name: newdish.name, description: newdish.description }),
-      });
-
-      let newDish =  await res.json();
-console.log("updated Dish",newDish);
-newDish.success? alert("Dish updated"): alert("error creating dishes");
-    }
-
-
-    // Delete a Dish
-    const deleteDish = async () => {
-      console.log("deletedish");
-      const res = await fetch("api/crud/user", {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ token }),
-      });
-
-      console.log(Response, res.json());
-     
-      return await res.json();
-    };
 
     return (
       <>
@@ -163,11 +185,18 @@ newDish.success? alert("Dish updated"): alert("error creating dishes");
         <h2> Welcome to your Restraunt Dashboard</h2>
         <h3>User Details</h3>
         <div className="userDetail">
-          {false ? <input value={email} onChange={(e) => setEmail(e.target.value)} /> : <p>{email}</p>}
-          {editmode ? <input value={name} onChange={(e) => setName(e.target.value)} /> : <p>{name}</p>}
-          {editmode ? <input value={city} onChange={(e) => setCity(e.target.value)} /> : <p>{city}</p>}
-          {editmode ? <input value={restaurant} onChange={
-            (e) => setRestaurant(e.target.value)} /> : <p>{restaurant}</p>}
+
+
+
+     {
+loading ? ("Loading user details..." ):(<>{false ? <input value={email} onChange={(e) => setEmail(e.target.value)}  /> : <p>{email}</p>
+}
+  {editmode ? <input value={name} onChange={(e) => setName(e.target.value)}  /> : <p>{name}</p>}
+  {editmode ? <input value={city} onChange={(e) => setCity(e.target.value)}   /> : <p>{city}</p>}
+  {editmode ? <input value={restaurant} onChange={
+    (e) => setRestaurant(e.target.value)} /> : <p>{restaurant}</p>}</>   )
+     } 
+      
 
           <div />
 
@@ -183,16 +212,17 @@ newDish.success? alert("Dish updated"): alert("error creating dishes");
         
           <button onClick={async () => {
             try {
+              setUpdated(!updated);
               const response = await updateUser();
             toast.success("user updated");
               // alert("User updated successfully!");
             } catch (error) {
               console.error("Error updating user:", error);
-              toast.success("error updating user");
+              // toast.success("error updating user");
             }
 
 
-          }}>Update Details</button>
+          }}   disabled={loading} >Update Details</button>
           <button onClick={async () => {
             let sure = confirm("do you really want to delete?");
             console.log(sure);
@@ -285,30 +315,6 @@ newDish.success? alert("Dish updated"): alert("error creating dishes");
             ) 
               }
 
-              {/* <div className="newDishContainer">
-               
-                {
-                  isNewDish?<div className="newDish">
-                      <label htmlFor="itemId">ItemId</label>
-                <input id="itemId" type='number' name="itemId" value={newdish?.itemId} onChange={handleNewDishChange} />
-                      <label htmlFor="itemId">Name</label>
-                <input id="newName" name="name"  type='text' value={newdish?.name} onChange={handleNewDishChange} />
-                      <label htmlFor="newDescription">Description</label>
-                <input  name="description"  id="description" type='text' value={newdish?.description} onChange={handleNewDishChange} /> */}
-                      {/* <label htmlFor="">ItemId</label>
-                <input id="" type='number' name='i'  value={newdish?.ingredients} onChange={handleNewDishChange} /> */}
-                  {/* </div>:<></> */}
-                {/* }
-
-               
-
-<button className='add-dish-button' onClick={()=>{
-  console.log("new dish", newdish);
-  createDish(newdish);
-  console.log("create dish")
-  setIsNewDish(!isNewDish)}} >{isNewDish?(<>Create</>):( <><img src="/plus.svg" alt="plus-sign" /> Add New Dish</>)}</button>
-{isNewDish?<button>Cancel</button>:<></>}
-              </div> */}
         </div>
       
         </div>
@@ -317,5 +323,6 @@ newDish.success? alert("Dish updated"): alert("error creating dishes");
 
     )
   }
+
 
   export default Dashboard;
