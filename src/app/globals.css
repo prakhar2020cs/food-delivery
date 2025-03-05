@@ -100,6 +100,10 @@ input{
     padding: 10px;
 }
 .userDetail{
+    border-radius: 12px;
+    text-align: center;
+    padding: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     display: flex
     ;
         flex-direction: column;
@@ -109,7 +113,8 @@ input{
         margin-bottom: 30px;
 }
 
-.dishes{
+.dishes, .newDish{
+    box-shadow:-6px 6px 6px rgba(255, 255, 255, 0.6);
     display: flex
     ;
     flex-direction: column;
@@ -126,7 +131,9 @@ input{
 }
 
 .userDishes{
- 
+    column-gap: 20px;
+    row-gap: 40px;
+ align-items: center;
     padding: 10px;
     background-color: rgb(221, 111, 111);
     display: flex;
@@ -143,11 +150,11 @@ input{
     flex-direction: column;
    gap: 5px;
 }
-.newDish{
+/* .newDish{
     display: flex
     ;
     flex-direction: column;
-}
+} */
 
 .add-dish-button{
     background-color: aquamarine;
@@ -175,4 +182,52 @@ input{
 button:disabled {
     opacity: 0.7;
     cursor: not-allowed;
+  }
+
+  /* -----dashboard----- */
+
+  .fit{
+    max-width: fit-content;
+  }
+  .user-dashboard input{
+    padding: 5px;
+  }
+
+  .userEditButtons, .newDishEditButtons{
+    display: flex;
+    justify-content: space-around;
+  }
+  .newDishEditButtons button{
+    padding: 7px 10px;
+  }
+
+  .userDetailInner{
+    flex-direction: column;
+    display: flex
+;
+    align-self: center;
+    max-width: fit-content;
+    text-align: left;
+  }
+
+
+.dishes h3{
+    /* transform: translate(12%, 302%) rotate(45deg); */
+    opacity: 0.3;
+}
+
+  .edit{
+ background-color: rgb(101, 101, 241);
+  }
+  .update{
+ background-color: rgb(201, 245, 80);
+  }
+  .delete{
+ background-color: rgb(253, 72, 72);
+  }
+
+
+  #itemId-warningText{
+    color: blue;
+    font-size: 10px;
   }
