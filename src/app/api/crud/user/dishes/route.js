@@ -96,7 +96,7 @@ console.log("--new dish", newDish);
         }
     
         // Find and delete the dish
-        const deletedDish = await dishSchema.findOneAndDelete(itemId);
+        const deletedDish = await dishSchema.findOneAndDelete({itemId});
     
         // Check if the dish was found and deleted
         if (!deletedDish) {

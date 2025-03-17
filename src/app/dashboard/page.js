@@ -228,13 +228,14 @@ const Dashboard = () => {
     let newDish = await res.json();
 
     console.log("updated Dish", newDish);
-    newDish.success ? toast.success("Dish updated") : toast.error("error updating dishes");
+    newDish.success ? toast.success("Dish updated") : toast.error("error updating dishes, try entering a unique ItemId");
     setRender(!render);
     // setCreateDishLoading(false)
     console.log("end")
   }
 
   const deleteDish = async (dish) => {
+    console.log("deletedish-itemId" , dish.itemId)
     console.log("deleteUser");
     const res = await fetch("/api/crud/user/dishes", {
       method: "DELETE",
@@ -242,6 +243,9 @@ const Dashboard = () => {
       body: JSON.stringify({ itemId: dish.itemId }),
     });
 
+  //   setDishes((currentDishes) => 
+  //     currentDishes.filter((D) => D.itemId !== dish.itemId)
+  // );
     // console.log(Response, res.json());
    
     setRender(!render);
@@ -407,7 +411,15 @@ const Dashboard = () => {
                   <button className='fit' onClick={() => {
                                       
                                         console.log("itemId",dish.itemId)
-                                        deleteDish(dish)
+
+                                        if (dish.itemId) {
+                                          deleteDish(dish)
+                                          console.log("inside if")
+                                        } 
+
+                                        console.log("no dish matching item id");
+                                       
+                                     
 
                                   
 
@@ -462,6 +474,12 @@ const Dashboard = () => {
                 //  createDish(newdish);
 
                 if (isNewDish) {
+                  if(newDish.itemId <=0 ){
+                    toast.error("enter a valid itemId, itemId cannot be 0 or negative");
+                    return
+                  }
+                  
+                  
                   createDish(newDish)
                 }
 

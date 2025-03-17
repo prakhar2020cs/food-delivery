@@ -24,6 +24,7 @@ export default function Home() {
     </div>
 
 <h1>Your Favourite place to get delicious food !</h1>
+<p>Go to restaurant section to check out your dishes and user details if you are registered , otherwise register yourself </p>
 
     </div>
   );
