@@ -130,7 +130,17 @@ input{
 
 }
 
+.userDetail .profile-pic {
+    width: 50px;
+    align-self: center;
+}
+
 .userDishes{
+    background-attachment: fixed;
+    background-image: url(/dishes-bg2.jpeg);
+    background-position: bottom;
+    background-size: cover;
+    background-repeat: no-repeat;
     column-gap: 20px;
     row-gap: 40px;
  align-items: center;
@@ -186,6 +196,25 @@ button:disabled {
 
   /* -----dashboard----- */
 
+.upload-img-button{
+    border: 1px solid greenyellow;
+ 
+
+    align-self: center;
+    color: rgb(221, 185, 138);
+    max-width: fit-content;
+    font-size: 10px;
+    background-color: #fff;
+}
+
+  .dishes{
+
+    opacity: 90%;
+  }
+
+  .profie{
+    border-radius: 50%;
+  }
   .fit{
     max-width: fit-content;
   }
@@ -230,4 +259,11 @@ button:disabled {
   #itemId-warningText{
     color: blue;
     font-size: 10px;
+  }
+  .new-profile-pic{
+    box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.3);
+    border: 3px solid red;
+    align-self: center;
+    border-radius: 50%;
+    width: 80px;
   }

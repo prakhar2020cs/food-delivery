@@ -30,6 +30,6 @@ export function middleware(request) {
 
 // Apply middleware **only** to protected routes
 export const config = {
-    matcher: ['/dashboard/:path*'],
+    matcher: ['/dashboard'],
 };
 

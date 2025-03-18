@@ -14,7 +14,7 @@ const Login = () => {
   const [userPassword, setPassword] = useState('');
   // let [tokenToVerify, setTokenToVerify] = useState(null);
   const router = useRouter();
-  let tokenToVerify = null;
+  // let tokenToVerify = null;
 
 
   useEffect(() => {
@@ -28,11 +28,13 @@ const Login = () => {
     // if no token st
  
     const verifyToken = async () => {
+      let tokenToVerify = Cookies.get("token"); // Get the token from cookies
 
-         if (Cookies.get("token")) {
-      console.log("signup-token, redirected to dashboard")
-      router.replace("/dashboard")
-    }
+
+    //      if (Cookies.get("token")) {
+    //   console.log("signup-token, redirected to dashboard")
+    //   router.replace("/dashboard")
+    // }
 
 
       console.log("verifying token...")

@@ -1,11 +1,12 @@
 "use client"
 
-
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
 import React from 'react';
 import { useState, useEffect } from 'react';
 import { toast, ToastContainer } from 'react-toastify';
+import Upload from './upload';
+import profilepicurl from '../lib/profilepicurl';
 
 
 
@@ -38,6 +39,15 @@ const Dashboard = () => {
     description: "",
     itemId: ""
   });
+
+  const [upload, setUpload] = useState(false);
+
+  const [imageUrl, setImageUrl] = useState("")
+
+  const handleSetProfile = (data) => {
+    setImageUrl(data)
+  }
+
 
 
   useEffect(() => {
@@ -228,14 +238,14 @@ const Dashboard = () => {
     let newDish = await res.json();
 
     console.log("updated Dish", newDish);
-    newDish.success ? toast.success("Dish updated") : toast.error("error updating dishes, try entering a unique ItemId");
+    newDish.success ? toast.success("Dish Created") : toast.error("error creating dishes, try entering a unique ItemId");
     setRender(!render);
     // setCreateDishLoading(false)
     console.log("end")
   }
 
   const deleteDish = async (dish) => {
-    console.log("deletedish-itemId" , dish.itemId)
+    console.log("deletedish-itemId", dish.itemId)
     console.log("deleteUser");
     const res = await fetch("/api/crud/user/dishes", {
       method: "DELETE",
@@ -243,15 +253,15 @@ const Dashboard = () => {
       body: JSON.stringify({ itemId: dish.itemId }),
     });
 
-  //   setDishes((currentDishes) => 
-  //     currentDishes.filter((D) => D.itemId !== dish.itemId)
-  // );
+    //   setDishes((currentDishes) => 
+    //     currentDishes.filter((D) => D.itemId !== dish.itemId)
+    // );
     // console.log(Response, res.json());
-   
-    setRender(!render);
 
+    setRender(!render);
+    toast.success("Dish Deleted")
     console.log("render", render)
-    return ;
+    return;
   };
 
 
@@ -261,14 +271,18 @@ const Dashboard = () => {
 
 
   return (
+
     <>
       <ToastContainer />
       <div className="dashboard-container">
         <h2> Welcome to your Restraunt Dashboard</h2>
         <h3>User Details</h3>
         <div className="userDetail">
-
-
+          {upload ? <Upload handleSetProfile={handleSetProfile} setUpload={setUpload}/> : <></>}
+          {<img className='new-profile-pic' src={profilepicurl.url} alt="profile-pic" />}
+          <button className='upload-img-button' onClick={() => setUpload(!upload)} >{upload?"Done":"Upload New Profile Picture"} </button>
+          {console.log("profile-url-dash", imageUrl)}
+         
           <div className="userDetailInner">
             {
               loading ? ("Loading user details...") : (<>{false ? (<div className="inputGroup">
@@ -348,7 +362,7 @@ const Dashboard = () => {
         </div>
         <h3>Dishes In Your Menu</h3>
         <div className="userDishes">
-          {/* dishes && dishes.length > 0 &&  */}
+          <h2>Dishes</h2>
 
           {
 
@@ -356,20 +370,12 @@ const Dashboard = () => {
 
               (dish) => (
                 <div className="dishes" key={dish._id}>
-                  <h3>Already Looks Delicious😋</h3>
+
+
                   {editDish === dish._id ? (<>
                     <p>Item Id:{dish.itemId}</p>
 
-                    {/* <label htmlFor="itemId">ItemId</label>
-              <input id="itemId" type='number' name="itemId" value={dish.itemId} onChange={(e)=>setDishes(
-                (currentDishes)=>
-                  currentDishes.map(
-                    (D)=>
-                  D._id === dish._id ?{ ...D, itemId: e.target.value}:D
-                    
-                  )
 
-              ) } /> */}
                     <label htmlFor="name">Name</label>
                     <input id="name" type='text' name="name" value={dish.name} onChange={(e) => setDishes(
                       (currentDishes) =>
@@ -409,23 +415,23 @@ const Dashboard = () => {
                   </>)}
 
                   <button className='fit' onClick={() => {
-                                      
-                                        console.log("itemId",dish.itemId)
 
-                                        if (dish.itemId) {
-                                          deleteDish(dish)
-                                          console.log("inside if")
-                                        } 
+                    console.log("itemId", dish.itemId)
 
-                                        console.log("no dish matching item id");
-                                       
-                                     
+                    if (dish.itemId) {
+                      deleteDish(dish)
+                      console.log("inside if")
+                    }
 
-                                  
+                    console.log("no dish matching item id");
+
+
+
+
 
                   }} >Delete</button>
                   <button className='edit fit' onClick={() => {
-                   if (editDish === dish._id) {
+                    if (editDish === dish._id) {
                       updateDish(dish); // Save changes when exiting edit mode
                       setEditDish(null); // Exit edit mode
                     } else {
@@ -445,6 +451,8 @@ const Dashboard = () => {
             )
             )
           }
+
+
 
 
           <div className="newDishContainer">
@@ -474,12 +482,12 @@ const Dashboard = () => {
                 //  createDish(newdish);
 
                 if (isNewDish) {
-                  if(newDish.itemId <=0 ){
+                  if (newDish.itemId <= 0) {
                     toast.error("enter a valid itemId, itemId cannot be 0 or negative");
                     return
                   }
-                  
-                  
+
+
                   createDish(newDish)
                 }
 
@@ -502,6 +510,7 @@ const Dashboard = () => {
       </div>
 
     </>
+
 
   )
 }
