@@ -5,9 +5,9 @@ const dishModel = new mongoose.Schema({
   itemId: { type: Number, required: true, unique: true },
   name: { type: String, required: true },
   description: { type: String },
-  // ingredients: { type: [String], required: true },
+
  
-},
+},{timestamps:true}
 
 );
 

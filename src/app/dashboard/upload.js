@@ -34,6 +34,7 @@ export default function Upload({handleSetProfile, setUpload}) {
         // ...
       });
           setFileUrl(res.url);
+          console.log("uploadEdge-setfileUrl",res.url)
           handleSetProfile(res.url)
           profilepicurl.url = res.url;
     
@@ -41,6 +42,7 @@ export default function Upload({handleSetProfile, setUpload}) {
 
   return (
     <div>
+      <h2>upload using edgestore</h2>
       <input className="upload-img-button" type="file" onChange={(e) => setFile(e.target.files?.[0] || null)} />
       <button className="upload-img-button" onClick={()=>{
          handleUpload()

@@ -1,6 +1,6 @@
-import mongoose from "mongoose";
-import { NextResponse } from 'next/server';
-import { connectionStr } from "@/app/lib/db";
+// import mongoose from "mongoose";
+// import { NextResponse } from 'next/server';
+// import { connectionStr } from "@/app/lib/db";
 import { restaurantSchema } from "@/app/lib/restaurantsModel"; // Import restaurantModel model
 import { dbConnect } from "@/app/lib/dbConnect";
 

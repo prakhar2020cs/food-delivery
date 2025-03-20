@@ -2,6 +2,9 @@ import { EdgeStoreProvider } from './lib/edgestore';
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Roboto } from 'next/font/google'
+import Script from "next/script";
+
+
 
 const roboto = Roboto({
   weight: ['100', '300', '400', '500', '700', '900'],
@@ -29,7 +32,7 @@ export default function RootLayout({ children }) {
     <html lang="en" className={geistSans.className}>
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <EdgeStoreProvider>  {children}</EdgeStoreProvider>
-      
+       
       </body>
     </html>
   );

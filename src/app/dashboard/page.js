@@ -7,6 +7,7 @@ import { useState, useEffect } from 'react';
 import { toast, ToastContainer } from 'react-toastify';
 import Upload from './upload';
 import profilepicurl from '../lib/profilepicurl';
+import UploadPage from './Uploadlocal';
 
 
 
@@ -40,12 +41,14 @@ const Dashboard = () => {
     itemId: ""
   });
 
+  // to toggle upload option
   const [upload, setUpload] = useState(false);
-
-  const [imageUrl, setImageUrl] = useState("")
+const [uploadVisible, setUploadVisible] = useState(false);
+  const [imageUrl, setImageUrl] = useState(null)
 
   const handleSetProfile = (data) => {
     setImageUrl(data)
+    console.log("handlesetprofile",data)
   }
 
 
@@ -275,12 +278,31 @@ const Dashboard = () => {
     <>
       <ToastContainer />
       <div className="dashboard-container">
+
+      
         <h2> Welcome to your Restraunt Dashboard</h2>
         <h3>User Details</h3>
         <div className="userDetail">
-          {upload ? <Upload handleSetProfile={handleSetProfile} setUpload={setUpload}/> : <></>}
-          {<img className='new-profile-pic' src={profilepicurl.url} alt="profile-pic" />}
-          <button className='upload-img-button' onClick={() => setUpload(!upload)} >{upload?"Done":"Upload New Profile Picture"} </button>
+          {console.log("email-dashboard",email)}
+{/* local upload */}
+<div className="visibility" style={{display:uploadVisible?"block":"none"}}>
+  <UploadPage email={email} handleSetProfile={handleSetProfile} /> 
+</div>
+
+
+{/* edge store upload */}
+          {/* {upload ? <Upload handleSetProfile={handleSetProfile} setUpload={setUpload}/> : <></>} */}
+          {imageUrl?<img className='new-profile-pic' src={imageUrl?imageUrl:"#"} alt="profile-pic" />:
+          <p>Loading...</p>
+          }
+          <button className='upload-img-button' onClick={() => {
+ setUpload(!upload)
+ setUploadVisible(!uploadVisible)
+ 
+          }
+         
+
+          } >{upload?"Done":"Upload New Profile Picture"} </button>
           {console.log("profile-url-dash", imageUrl)}
          
           <div className="userDetailInner">
