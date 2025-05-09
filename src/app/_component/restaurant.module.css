@@ -1,0 +1,55 @@
+
+
+.header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center
+    ;
+    padding: 10px;
+    background-color: antiquewhite;
+}
+.imgContainer{
+    margin-inline: auto;
+    text-align: center;
+}
+.imgContainer img{
+    border-radius: 50%;
+    max-width: 200px;
+}
+
+.headerRight{
+    display: flex;
+    gap: 15px;
+}
+
+
+.logo{
+    display: flex;
+    align-items: center;
+}
+.logo img{
+   
+    width: 100px;
+}
+
+form.login,form.signUp, .login .container, .container{ 
+    border-radius: 12px;
+    padding: 10px;
+   background-color: rgb(192, 92, 92);
+    width: 60%;
+    margin-inline: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+footer.footer{
+    
+    padding: 20px;
+    background-color: var(--primary-bg);
+}
+.footer h2{
+    text-align: center;
+    /* margin-inline: auto; */
+}
+
