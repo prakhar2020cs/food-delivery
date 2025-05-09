@@ -79,7 +79,10 @@ setIsLoading(true);
     // if error
     const{message} = response;
     setIsLoading(false);
-    toast.error(message);
+    if(error){
+      toast.error(message);
+    }
+  
 
 
   }

@@ -8,29 +8,33 @@ import Link from "next/link";
 
 const Login = () => {
 
+  const [loading, setLoading] = useState(false);
+
   const [userEmail, setEmail] = useState('');
   const [userPassword, setPassword] = useState('');
   // let [tokenToVerify, setTokenToVerify] = useState(null);
   const router = useRouter();
-  let tokenToVerify = null;
+  // let tokenToVerify = null;
 
 
   useEffect(() => {
     console.log("use effect")
-    let storedUser = localStorage.getItem("registeredUser");
-    console.log("storedUser", storedUser);
-    const parsedtoken = JSON.parse(storedUser);
-    tokenToVerify = parsedtoken?.token;
-    console.log("tokenToverify---login page", tokenToVerify);
+    // let storedUser = localStorage.getItem("registeredUser");
+    // console.log("storedUser", storedUser);
+    // const parsedtoken = JSON.parse(storedUser);
+    // tokenToVerify = parsedtoken?.token;
+    // console.log("tokenToverify---login page", tokenToVerify);
 
     // if no token st
  
     const verifyToken = async () => {
+      let tokenToVerify = Cookies.get("token"); // Get the token from cookies
 
-         if (Cookies.get("token")) {
-      console.log("signup-token, redirected to dashboard")
-      router.replace("/dashboard")
-    }
+
+    //      if (Cookies.get("token")) {
+    //   console.log("signup-token, redirected to dashboard")
+    //   router.replace("/dashboard")
+    // }
 
 
       console.log("verifying token...")
@@ -76,6 +80,7 @@ const Login = () => {
   }, [])
 
   const handleLogin = async (e) => {
+    setLoading(true)
 
     if (!userEmail || !userPassword) {
       window.alert("Email and password are required");
@@ -93,8 +98,8 @@ const Login = () => {
     if (response.success) {
       const { userData, token } = response;
       console.log(userData, token);
-      localStorage.setItem("registeredUser", JSON.stringify({ userData, token }));
-      Cookies.set("token", JSON.stringify({ token }), {
+      // localStorage.setItem("registeredUser", JSON.stringify({ userData, token }));
+      Cookies.set("token", token, {
         expires: 7, // Cookie expires in 7 days
 
         sameSite: 'strict' // Protect against CSRF
@@ -106,9 +111,10 @@ const Login = () => {
 
 
     } else {
+      setLoading(false)
       window.alert("invalid user");
     }
-
+    setLoading(false)
 
   }
   // console.log(email);
@@ -128,10 +134,8 @@ const Login = () => {
           <label htmlFor="psw"><b>Password</b></label>
           <input type="password" value={userPassword} onChange={(e) => { setPassword(e.target.value) }} placeholder="Enter Password" name="password" required />
 
-          <button type="submit" onClick={handleLogin}>Login</button>
-          <label>
-            <input type="checkbox" defaultChecked="defaultChecked" name="remember" /> Remember me
-          </label>
+          <button type="submit" onClick={handleLogin} disabled={loading}>{loading?"Logging In..":  "Login"}</button>
+        
         </div>
 
         <div className={style.container}>

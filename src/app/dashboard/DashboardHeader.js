@@ -16,10 +16,13 @@ const DashboardHeader = () => {
 let [userDetails, setUserDetails] = useState("");
 
   const router = useRouter();
-  const pathName = usePathname();
+  // const pathName = usePathname();
  
 
 let tokenToVerify = null;
+
+
+
 
 useEffect(
   ()=>{
@@ -29,7 +32,6 @@ useEffect(
       router.push("/restaurant");
       return;
     }
-   token = JSON.parse(token).token;
    tokenToVerify = token;
    console.log("dashboard header token useeffect----", token)
 
@@ -70,7 +72,7 @@ useEffect(
 
 
   const logout = () => {
-    localStorage.removeItem("registeredUser");
+    // localStorage.removeItem("registeredUser");
 
     setUserDetails('');
     Cookies.remove("token",  { path: "/" });
@@ -85,11 +87,11 @@ useEffect(
   }
   return (<>
     {console.log("restaurant header2")}
-    <div className={style.header}>
+    <div className="header">
       <Link href="#" className={style.logo}>
         <img src="delivery-boy-logo.webp" alt="" /><span>FoodZilla</span>
       </Link>
-      <div className={style.headerRight}>
+      <div className="headerRight">
         {/* <Link href="/restaurant">Home</Link> */}
 
 
@@ -103,7 +105,8 @@ useEffect(
       </div>
     </div>
 
-  </>)
+  </>
+  )
 
 }
 

@@ -22,6 +22,290 @@ body{
    
 }
 
+
+/* new */
+
+
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background-color: antiquewhite;
+}
+
+.headerRight {
+    display: flex;
+    gap: 15px;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+}
+
+.logo img {
+    width: 100px;
+}
+.header img {
+    width: 100px;
+}
+
+
+
+
+/* new */
+
+
+
+.restaurant-container{
+    display: flex
+    ;
+        flex-direction: column;
+        /* align-items: center; */
+        gap: 10px
+}
+.dashboard-container{
+    margin-top: 20px;
+}
+
+.dashboard-container h3{
+    text-align: center;
+    margin-bottom: 10px;
+    /* margin-inline: auto; */
+}
+.dashboard-container h2{
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+
+button.loginSignup{
+    margin-inline: auto;
+}
+
+a{
+
+    text-decoration: none;
+}
+a, button{
+    cursor: pointer;
+    color: white;
+    padding: 10px;
+    border-radius: 12px;
+    background-color: brown;
+}
+input{
+    padding: 10px;
+}
+.userDetail{
+    border-radius: 12px;
+    text-align: center;
+    padding: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    display: flex
+    ;
+        flex-direction: column;
+        gap: 10px;
+        max-width: 60%;
+        MARGIN-INLINE: auto;
+        margin-bottom: 30px;
+}
+
+.dishes, .newDish{
+    box-shadow:-6px 6px 6px rgba(255, 255, 255, 0.6);
+    display: flex
+    ;
+    flex-direction: column;
+    gap: 5px;
+    justify-content: space-between;
+    background-color: rgb(218, 94, 94);
+    border: 1px solid black;
+    padding: 10px;
+    border-radius: 12px;
+    /* margin-bottom: 10px; */
+
+    max-width: fit-content;
+
+}
+
+.userDetail .profile-pic {
+    width: 50px;
+    align-self: center;
+}
+
+.userDishes{
+    background-attachment: fixed;
+    background-image: url(/dishes-bg2.jpeg);
+    background-position: bottom;
+    background-size: cover;
+    background-repeat: no-repeat;
+    column-gap: 20px;
+    row-gap: 40px;
+ align-items: center;
+    padding: 10px;
+    background-color: rgb(221, 111, 111);
+    display: flex;
+    flex-wrap: wrap;
+    border: 1px soid rgb(197, 66, 66);
+    border-radius: 12px;
+    justify-content: space-evenly;
+    /* gap: 10px; */
+}
+
+.newDishContainer{
+    display: flex
+    ;
+    flex-direction: column;
+   gap: 5px;
+}
+/* .newDish{
+    display: flex
+    ;
+    flex-direction: column;
+} */
+
+.add-dish-button{
+    background-color: aquamarine;
+    display: flex;
+    align-items: center;
+   justify-content: center;
+}
+
+
+
+.forgot-form{
+    color: #fff;
+    border: 2px solid rgb(147, 16, 16);
+    border-radius:12px;
+    margin-top: 100px;
+ margin-inline: auto;
+    padding: 10px;
+    background-color: rgb(192, 92, 92);
+    max-width: 50%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+button:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+
+  /* -----dashboard----- */
+
+.upload-img-button{
+    border: 1px solid greenyellow;
+ 
+
+    align-self: center;
+    color: rgb(221, 185, 138);
+    max-width: fit-content;
+    font-size: 10px;
+    background-color: #fff;
+}
+
+  .dishes{
+
+    opacity: 90%;
+  }
+
+  .profie{
+    border-radius: 50%;
+  }
+  .fit{
+    max-width: fit-content;
+  }
+  .user-dashboard input{
+    padding: 5px;
+  }
+
+  .userEditButtons, .newDishEditButtons{
+    display: flex;
+    justify-content: space-around;
+  }
+  .newDishEditButtons button{
+    padding: 7px 10px;
+  }
+
+  .userDetailInner{
+    flex-direction: column;
+    display: flex
+;
+    align-self: center;
+    max-width: fit-content;
+    text-align: left;
+  }
+
+
+.dishes h3{
+    /* transform: translate(12%, 302%) rotate(45deg); */
+    opacity: 0.3;
+}
+
+  .edit{
+ background-color: rgb(101, 101, 241);
+  }
+  .update{
+ background-color: rgb(201, 245, 80);
+  }
+  .delete{
+ background-color: rgb(253, 72, 72);
+  }
+
+
+  #itemId-warningText{
+    color: blue;
+    font-size: 10px;
+  }
+  .new-profile-pic{
+    box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.3);
+    border: 3px solid red;
+    align-self: center;
+    border-radius: 50%;
+    width: 80px;
+  }
+
+  /* ===page.js=== */
+  #search-bar{
+   
+   width: 30%;
+    margin: auto;
+  }
+
+  .public-page{
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+    /* align-items: center; */
+    justify-content: center;
+  }
+
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+:root{
+    --primary-bg:antiquewhite;
+}
+
+*{
+    margin: 0;
+    padding: 0; 
+    transition: all .3s;
+
+  
+}
+h2,h1{
+    text-align: center;
+}
+
+body{
+   
+    font-family: 'Roboto';
+    font-style: normal;
+   
+}
+
 .restaurant-container{
     display: flex
     ;

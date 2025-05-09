@@ -1,211 +1,21 @@
-
-
-.header{
+/* .header {
     display: flex;
     justify-content: space-between;
-    align-items: center
-    ;
+    align-items: center;
     padding: 10px;
     background-color: antiquewhite;
 }
 
-.headerRight{
+.headerRight {
     display: flex;
     gap: 15px;
 }
 
-
-.logo{
+.logo {
     display: flex;
     align-items: center;
 }
-.logo img{
-   
+
+.logo img {
     width: 100px;
-}
-.header{
-    display: flex;
-    justify-content: space-between;
-    align-items: center
-    ;
-    padding: 10px;
-    background-color: antiquewhite;
-}
-
-.headerRight{
-    display: flex;
-    gap: 15px;
-}
-
-
-.logo{
-    display: flex;
-    align-items: center;
-}
-.logo img{
-   
-    width: 100px;
-}
-.header{
-    display: flex;
-    justify-content: space-between;
-    align-items: center
-    ;
-    padding: 10px;
-    background-color: antiquewhite;
-}
-
-.headerRight{
-    display: flex;
-    gap: 15px;
-}
-
-
-.logo{
-    display: flex;
-    align-items: center;
-}
-.logo img{
-   
-    width: 100px;
-}
-.header{
-    display: flex;
-    justify-content: space-between;
-    align-items: center
-    ;
-    padding: 10px;
-    background-color: antiquewhite;
-}
-
-.headerRight{
-    display: flex;
-    gap: 15px;
-}
-
-
-.logo{
-    display: flex;
-    align-items: center;
-}
-.logo img{
-   
-    width: 100px;
-}
-.header{
-    display: flex;
-    justify-content: space-between;
-    align-items: center
-    ;
-    padding: 10px;
-    background-color: antiquewhite;
-}
-
-.headerRight{
-    display: flex;
-    gap: 15px;
-}
-
-
-.logo{
-    display: flex;
-    align-items: center;
-}
-.logo img{
-   
-    width: 100px;
-}
-.header{
-    display: flex;
-    justify-content: space-between;
-    align-items: center
-    ;
-    padding: 10px;
-    background-color: antiquewhite;
-}
-
-.headerRight{
-    display: flex;
-    gap: 15px;
-}
-
-
-.logo{
-    display: flex;
-    align-items: center;
-}
-.logo img{
-   
-    width: 100px;
-}
-.header{
-    display: flex;
-    justify-content: space-between;
-    align-items: center
-    ;
-    padding: 10px;
-    background-color: antiquewhite;
-}
-
-.headerRight{
-    display: flex;
-    gap: 15px;
-}
-
-
-.logo{
-    display: flex;
-    align-items: center;
-}
-.logo img{
-   
-    width: 100px;
-}
-.header{
-    display: flex;
-    justify-content: space-between;
-    align-items: center
-    ;
-    padding: 10px;
-    background-color: antiquewhite;
-}
-
-.headerRight{
-    display: flex;
-    gap: 15px;
-}
-
-
-.logo{
-    display: flex;
-    align-items: center;
-}
-.logo img{
-   
-    width: 100px;
-}
-.header{
-    display: flex;
-    justify-content: space-between;
-    align-items: center
-    ;
-    padding: 10px;
-    background-color: antiquewhite;
-}
-
-.headerRight{
-    display: flex;
-    gap: 15px;
-}
-
-
-.logo{
-    display: flex;
-    align-items: center;
-}
-.logo img{
-   
-    width: 100px;
-}
-
-
+} */

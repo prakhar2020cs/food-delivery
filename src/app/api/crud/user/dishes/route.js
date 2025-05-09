@@ -1,14 +1,18 @@
-import mongoose from "mongoose";
+// import mongoose from "mongoose";
 import dishSchema from "/src/app/lib/dishesModel";
 import { NextResponse } from "next/server";
-import { connectionStr } from "@/app/lib/db";
+// import { connectionStr } from "@/app/lib/db";
 import { dbConnect } from "@/app/lib/dbConnect";
 
-export async function GET() {
+export async function GET(req) {
+
+  await dbConnect();
+
     try {
-      await mongoose.connect(connectionStr);
-  
-      const dishes = await dishSchema.find({});
+     
+  const email = req.headers.get('email');
+  console.log("email---",email)
+      const dishes = await dishSchema.find({email});
       return NextResponse.json(dishes, { status: 200 });
     } catch (error) {
       return NextResponse.json({ message: "Error fetching dishes", error }, { status: 500 });
@@ -17,21 +21,16 @@ export async function GET() {
 
 export async function PUT(req) {
 
+await dbConnect();
 
-
-  try{
-    await mongoose.connect(connectionStr);
-
-  }catch(error){
-    console.log("MongoDb connection error", error);
-return NextResponse.json({message:"there is error connecting to database", success:"false"});
-  }
+ 
     try {
-    
-  const { _id ,itemId, name, description} = await req.json();
+  
+  const { email, name, description} = await req.json();
+
       const dishes = await dishSchema.findOneAndUpdate(
-        {_id},
-        { itemId ,name, description},
+        {email},
+        { name, description},
         {new:true}
       );
       return NextResponse.json({dishes, success: true} ,{ status: 200 });
@@ -46,9 +45,13 @@ return NextResponse.json({message:"there is error connecting to database", succe
 
 
 await dbConnect();
-const {email} = await req.json();
 
-if(email){
+
+console.log("Received POST request");
+const data = await req.json();
+console.log("Received data:", data);
+console.log(data.email)
+if(!data.name){
   try {
     const dishes = await dishSchema.find({email})
     ;
@@ -65,7 +68,7 @@ if(email){
       try {
       
    console.log("--new dish----")
-let newDish = await req.json();
+let newDish = data;
 console.log("--new dish", newDish);
     let dish = new dishSchema(newDish);
   
@@ -79,6 +82,33 @@ console.log("--new dish", newDish);
       }
     }
 
+
+    export async function DELETE(req) {
+      await dbConnect();
+    
+      try {
+        const { itemId } = await req.json(); // Get itemId from the request body
+        console.log("Deleting dish with itemId:", itemId);
+    
+        // Check if itemId is provided
+        if (!itemId) {
+          return NextResponse.json({ message: "itemId is required" }, { status: 400 });
+        }
+    
+        // Find and delete the dish
+        const deletedDish = await dishSchema.findOneAndDelete({itemId});
+    
+        // Check if the dish was found and deleted
+        if (!deletedDish) {
+          return NextResponse.json({ message: "Dish not found" }, { status: 404 });
+        }
+    
+        return NextResponse.json({ message: "Dish deleted successfully", deletedDish }, { status: 200 });
+      } catch (error) {
+        console.error("Error deleting dish:", error);
+        return NextResponse.json({ message: "Error deleting dish", error }, { status: 500 });
+      }
+    }
   
 
 

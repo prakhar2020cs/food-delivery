@@ -1,59 +1,122 @@
 "use client"
 
-
+import Cookies from 'js-cookie';
+import { useRouter } from 'next/navigation';
 import React from 'react';
 import { useState, useEffect } from 'react';
 import { toast, ToastContainer } from 'react-toastify';
+import Upload from './upload';
+import profilepicurl from '../lib/profilepicurl';
+import UploadPage from './Uploadlocal';
 
 
 
 
 const Dashboard = () => {
 
+  const router = useRouter();
 
+  const [render, setRender] = useState(false)
 
-  let [editmode, setEditmode] = useState(false);
-  let [editDish, setEditDish] = useState(false);
-  let [email, setEmail] = useState('');
-  let [token, setToken] = useState('');
-  let [name, setName] = useState('');
-  let [city, setCity] = useState('');
-  let [restaurant, setRestaurant] = useState('');
+  const [dishValidateMessage, setDishValidateMessage] = useState();
+  const [loading, setLoading] = useState(false);
+  // const [createDishLoading, setCreateDishLoading ] = useState(false);
+  const [editmode, setEditmode] = useState(false);
+  const [editDish, setEditDish] = useState(false);
+  const [email, setEmail] = useState('');
+  const [token, setToken] = useState('');
+  const [name, setName] = useState('');
+  const [city, setCity] = useState('');
+  const [restaurant, setRestaurant] = useState('');
+  const [updated, setUpdated] = useState(false);
+
 
 
   const [dishes, setDishes] = useState([]);
   const [isNewDish, setIsNewDish] = useState(false);
-  const [newdish, setNewDish] = useState({
-    itemId:"",
-    name:"",
-    description:""
+  const [newDish, setNewDish] = useState({
+    email: "",
+    name: "",
+    description: "",
+    itemId: ""
   });
 
+  // to toggle upload option
+  const [upload, setUpload] = useState(false);
+const [uploadVisible, setUploadVisible] = useState(false);
+  const [imageUrl, setImageUrl] = useState(null)
+
+  const handleSetProfile = (data) => {
+    setImageUrl(data)
+    console.log("handlesetprofile",data)
+  }
 
 
-  
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const userToken = Cookies.get("token");
+      if (userToken) {
+        setToken(userToken); // Set token
+      }
+
+    }
+  }, []);
+
+  useEffect(() => {
+    // const token = Cookies.get("token");
+    // setToken(token);
+    if (!token) {
+      return
+    }
 
 
-  useEffect( () => {
-    let data = localStorage.getItem("registeredUser");
-    data = JSON.parse(data);
+    const fetchUser = async () => {
+      setLoading(true);
+      let res = await fetch("/api/crud/user", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        }
+      });
+      res = await res.json();
+      let userDetails = res.user;
+      console.log("user details in dashboard page", userDetails);
 
-    console.log("dashboard data", data);
+      setEmail(userDetails.email || "");
+      console.log("user email", userDetails.email)
 
 
-    if (data) {
-      console.log("hello")
-      setEmail(data.userData.email);
-      setName(data.userData.name);
-      setCity(data.userData.city);
-      setToken(data.token);
-      setRestaurant(data.userData.restaurant);
+
+      setName(userDetails.name || "");
+      setCity(userDetails.city || "");
+      // setToken(data.token);
+      setRestaurant(userDetails.restaurant || "");
+      setLoading(false)
+
+      await fetchDishes(userDetails.email);
+
 
     }
 
-    const fetchDishes = async () => {
+
+
+
+
+    const fetchDishes = async (userEmail) => {
+      console.log("user email--", userEmail)
+      setEmail(userEmail)
       try {
-        const response = await fetch("/api/crud/user/dishes"); // Call API
+        const response = await fetch("/api/crud/user/dishes",
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              "email": userEmail
+            }
+          }
+        ); // Call API
         const data = await response.json();
         console.log(data);
         setDishes(data); // Store in state
@@ -62,11 +125,23 @@ const Dashboard = () => {
       }
     };
 
-    fetchDishes();
 
 
 
-  }, []);
+    fetchUser();
+    // fetchDishes();
+
+  }
+    , [token, render])
+
+  // 
+
+
+
+
+
+
+
 
 
 
@@ -74,18 +149,24 @@ const Dashboard = () => {
 
   // Update user details
   const updateUser = async () => {
+    setEditmode(false)
+    setLoading(true)
+    console.log("update user")
     let res = await fetch("api/crud/user", {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ token, name, email, city, restaurant }),
     });
-   res = await res.json();
-   
-    console.log( "updateUserResponse", res);
+    res = await res.json();
+
+    console.log("updateUserResponse", res);
+    setLoading(false)
+
     return res;
   };
 
-  // Delete a user
+
+
   const deleteUser = async () => {
     console.log("deleteUser");
     const res = await fetch("api/crud/user", {
@@ -93,163 +174,251 @@ const Dashboard = () => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ token }),
     });
-    setEmail("");
-    setName("");
-    setCity("");
-    setToken("");
-    setRestaurant("");
+    setEmail(null);
+    setName(null);
+    setCity(null);
+    setToken(null);
+    setRestaurant(null);
     setDishes([])
-    localStorage.removeItem("registeredUser");
-    Router.push("/restaurant");
+    Cookies.remove("token");
+    router.push("/restaurant");
   }
 
 
   const handleNewDishChange = (e) => {
+
     const { name, value } = e.target; // Get input name & value
     setNewDish((prevDish) => ({
       ...prevDish,
+
       [name]: value,  // Update the correct property dynamically
     }));
   };
 
 
-    // Update Dish
-    const updateDish = async (dish) => {
-      const res = await fetch("api/crud/user/dishes", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({   _id:dish._id , itemId:dish.itemId, name: dish.name, description: dish.description }),
-      });
+  // Update Dish
+  const updateDish = async (dish) => {
+    const res = await fetch("api/crud/user/dishes", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ _id: dish._id, itemId: dish.itemId, name: dish.name, description: dish.description }),
+    });
 
-let updatedDish =  await res.json();
-console.log("updated Dish", updatedDish);
-updatedDish.success? alert("Dish updated"): alert("error updating dishes");
+    let updatedDish = await res.json();
+    console.log("updated Dish", updatedDish);
+    updatedDish.success ? alert("Dish updated") : alert("error updating dishes");
 
-      return updatedDish;
-    };
+    return updatedDish;
+  };
 
-    const createDish = async (dish) =>{
-      console.log(dish);
-      const res = await fetch("api/crud/user/dishes", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({   itemId:newdish.itemId, name: newdish.name, description: newdish.description }),
-      });
+  function validateDish(d) {
+    console.log("d", d)
+    if (!d.itemId || !d.name) {
+      setDishValidateMessage("must provide a name and unique ItemId to a dish")
+      return false
+    }
 
-      let newDish =  await res.json();
-console.log("updated Dish",newDish);
-newDish.success? alert("Dish updated"): alert("error creating dishes");
+    setDishValidateMessage("dish validated")
+    return true;
+  }
+
+  const createDish = async (dish) => {
+    // setCreateDishLoading(true)
+    console.log("email", email)
+    console.log("dish", dish);
+    if (!validateDish(dish)) {
+      toast.info(dishValidateMessage)
+      return
     }
 
 
-    // Delete a Dish
-    const deleteDish = async () => {
-      console.log("deletedish");
-      const res = await fetch("api/crud/user", {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ token }),
-      });
+    const res = await fetch("/api/crud/user/dishes", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ itemId: dish.itemId, email: email, name: dish.name, description: dish.description }),
+    });
 
-      console.log(Response, res.json());
-     
-      return await res.json();
-    };
+    let newDish = await res.json();
 
-    return (
-      <>
-      <ToastContainer/>
-        <div className="dashboard-container">
+    console.log("updated Dish", newDish);
+    newDish.success ? toast.success("Dish Created") : toast.error("error creating dishes, try entering a unique ItemId");
+    setRender(!render);
+    // setCreateDishLoading(false)
+    console.log("end")
+  }
+
+  const deleteDish = async (dish) => {
+    console.log("deletedish-itemId", dish.itemId)
+    console.log("deleteUser");
+    const res = await fetch("/api/crud/user/dishes", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ itemId: dish.itemId }),
+    });
+
+    //   setDishes((currentDishes) => 
+    //     currentDishes.filter((D) => D.itemId !== dish.itemId)
+    // );
+    // console.log(Response, res.json());
+
+    setRender(!render);
+    toast.success("Dish Deleted")
+    console.log("render", render)
+    return;
+  };
+
+
+  useEffect(() => {
+    console.log("newdish value", newDish)
+  }, [newDish])
+
+
+  return (
+
+    <>
+      <ToastContainer />
+      <div className="dashboard-container">
+
+      
         <h2> Welcome to your Restraunt Dashboard</h2>
         <h3>User Details</h3>
         <div className="userDetail">
-          {false ? <input value={email} onChange={(e) => setEmail(e.target.value)} /> : <p>{email}</p>}
-          {editmode ? <input value={name} onChange={(e) => setName(e.target.value)} /> : <p>{name}</p>}
-          {editmode ? <input value={city} onChange={(e) => setCity(e.target.value)} /> : <p>{city}</p>}
-          {editmode ? <input value={restaurant} onChange={
-            (e) => setRestaurant(e.target.value)} /> : <p>{restaurant}</p>}
+          {console.log("email-dashboard",email)}
+{/* local upload */}
+<div className="visibility" style={{display:uploadVisible?"block":"none"}}>
+  <UploadPage email={email} handleSetProfile={handleSetProfile} /> 
+</div>
+
+
+{/* edge store upload */}
+          {/* {upload ? <Upload handleSetProfile={handleSetProfile} setUpload={setUpload}/> : <></>} */}
+          {imageUrl?<img className='new-profile-pic' src={imageUrl?imageUrl:"#"} alt="profile-pic" />:
+          <p>Loading...</p>
+          }
+          <button className='upload-img-button' onClick={() => {
+ setUpload(!upload)
+ setUploadVisible(!uploadVisible)
+ 
+          }
+         
+
+          } >{upload?"Done":"Upload New Profile Picture"} </button>
+          {console.log("profile-url-dash", imageUrl)}
+         
+          <div className="userDetailInner">
+            {
+              loading ? ("Loading user details...") : (<>{false ? (<div className="inputGroup">
+                <label htmlFor="email"></label>
+                <input id='email' value={email} onChange={(e) => setEmail(e.target.value)} />
+              </div>) : <p><b>Email: </b>{email}</p>
+              }
+                {editmode ? (
+                  <div className="inputGroup">
+                    <label htmlFor="name"><b>Name: </b></label>
+                    <input id='name' placeholder='Edit Name' value={name} onChange={(e) => setName(e.target.value)} />
+                  </div>
+
+                ) : <p><b>Name: </b>{name}</p>}
+                {editmode ? (
+                  <div className="inputGroup">
+                    <label htmlFor="city"><b>City: </b></label>
+                    <input id='city' placeholder='Edit City' value={city} onChange={(e) => setCity(e.target.value)} />
+                  </div>
+                ) : <p>
+                  <b>City: </b>{city}</p>}
+                {editmode ?
+                  (<div className="inputGroup">
+                    <label htmlFor="restaurant"><b>Restaurant: </b></label>
+                    <input id="restaurant" placeholder='Edit Restaurant' value={restaurant} onChange={
+                      (e) => setRestaurant(e.target.value)} />
+                  </div>)
+                  : <p><b>Restaurant: </b> {restaurant}</p>}</>)
+            }
+          </div>
+
+
 
           <div />
+          <div className="userEditButtons">
+            <button className='edit'
+              onClick={() => {
 
-          <button
-            onClick={() => {
+                setEditmode(!editmode);
 
-              setEditmode(!editmode);
+              }}>
 
-            }}>
+              Edit Details
+            </button>
 
-            Edit Details
-          </button>
-        
-          <button onClick={async () => {
-            try {
-              const response = await updateUser();
-            toast.success("user updated");
-              // alert("User updated successfully!");
-            } catch (error) {
-              console.error("Error updating user:", error);
-              toast.success("error updating user");
-            }
-
-
-          }}>Update Details</button>
-          <button onClick={async () => {
-            let sure = confirm("do you really want to delete?");
-            console.log(sure);
-            if (sure) {
+            <button className='update' onClick={async () => {
               try {
-                await deleteUser();
-                toast.success("user deleted")
+                setUpdated(!updated);
+                const response = await updateUser();
+                toast.success("user updated");
+                // alert("User updated successfully!");
               } catch (error) {
-               toast.error("error deleting user")
+                console.error("Error updating user:", error);
+                // toast.success("error updating user");
               }
 
-            }
+
+            }} disabled={loading} >Update Details</button>
+            <button onClick={async () => {
+              let sure = confirm("do you really want to delete?");
+              console.log(sure);
+              if (sure) {
+                try {
+                  await deleteUser();
+                  toast.success("user deleted")
+                } catch (error) {
+                  toast.error("error deleting user")
+                }
+
+              }
 
 
-          }} >Delete User</button>
+            }} >Delete User</button>
+
+          </div>
+
         </div>
         <h3>Dishes In Your Menu</h3>
         <div className="userDishes">
-    
-         { 
-       
-        dishes.length===0 ? ( <p>Loading Dishes...</p> ): (dishes && dishes.length > 0 && dishes.map(
-            
-          (dish)=>(
-              <div className="dishes" key = {dish._id}>
-              {editDish===dish._id ?( <> 
-              <label htmlFor="itemId">ItemId</label>
-              <input id="itemId" type='number' name="itemId" value={dish.itemId} onChange={(e)=>setDishes(
-                (currentDishes)=>
-                  currentDishes.map(
-                    (D)=>
-                  D._id === dish._id ?{ ...D, itemId: e.target.value}:D
-                    
-                  )
+          <h2>Dishes</h2>
 
-              ) } />
-              <label htmlFor="name">Name</label>
-              <input id="name" type='text' name="name" value={dish.name} onChange={(e)=>setDishes(
-                (currentDishes)=>
-                  currentDishes.map(
-                    (D)=>
-                  D._id === dish._id ?{ ...D, name: e.target.value}:D
-                    
-                  )
+          {
 
-              ) } />
-              <label htmlFor="description" >Description</label>
-              <input id="description" type='text' name="description"   value={dish.description} onChange={(e)=>setDishes(
-                (currentDishes)=>
-                  currentDishes.map(
-                    (D)=>
-                  D._id === dish._id ?{ ...D, description: e.target.value}:D
-                    
-                  )
+            dishes.length === 0 ? (<p>Loading Dishes...</p>) : (dishes.map(
 
-              ) } />
-              {/* <input type='text' value={dish.ingredients} onChange={(e)=>setDishes(
+              (dish) => (
+                <div className="dishes" key={dish._id}>
+
+
+                  {editDish === dish._id ? (<>
+                    <p>Item Id:{dish.itemId}</p>
+
+
+                    <label htmlFor="name">Name</label>
+                    <input id="name" type='text' name="name" value={dish.name} onChange={(e) => setDishes(
+                      (currentDishes) =>
+                        currentDishes.map(
+                          (D) =>
+                            D._id === dish._id ? { ...D, name: e.target.value } : D
+
+                        )
+
+                    )} />
+                    <label htmlFor="description" >Description</label>
+                    <input id="description" type='text' name="description" value={dish.description} onChange={(e) => setDishes(
+                      (currentDishes) =>
+                        currentDishes.map(
+                          (D) =>
+                            D._id === dish._id ? { ...D, description: e.target.value } : D
+
+                        )
+
+                    )} />
+                    {/* <input type='text' value={dish.ingredients} onChange={(e)=>setDishes(
                 (currentDishes)=>{
                   currentDishes.map(
                     (D)=>
@@ -258,64 +427,115 @@ newDish.success? alert("Dish updated"): alert("error creating dishes");
                   )
 
               }) } /> */}
-             
-              </>) :(<>
-              
-                <p>Item Id:{dish.itemId}</p>
-              <p>Name: {dish.name}</p>
-              <p>Description: {dish.description}</p>
-              <p>Ingredients: {dish.ingredients.join(', ')}</p>
-              </> )}
-             
-            <button onClick={()=>{
-               if (editDish === dish._id) {
-                updateDish(dish); // Save changes when exiting edit mode
-                setEditDish(null); // Exit edit mode
-              } else {
-                setEditDish(dish._id); // Enter edit mode
-              }
-            }} >{editDish===dish._id ?  "Save":"EditDish"}</button>
-          
-              </div>
-              
+
+                  </>) : (<>
+
+                    <p>Item Id:{dish.itemId}</p>
+                    <p>Name: {dish.name}</p>
+                    <p>Description: {dish.description}</p>
+                    {/* <p>Ingredients: {dish.ingredients.join(', ')}</p> */}
+                  </>)}
+
+                  <button className='fit' onClick={() => {
+
+                    console.log("itemId", dish.itemId)
+
+                    if (dish.itemId) {
+                      deleteDish(dish)
+                      console.log("inside if")
+                    }
+
+                    console.log("no dish matching item id");
+
+
+
+
+
+                  }} >Delete</button>
+                  <button className='edit fit' onClick={() => {
+                    if (editDish === dish._id) {
+                      updateDish(dish); // Save changes when exiting edit mode
+                      setEditDish(null); // Exit edit mode
+                    } else {
+                      setEditDish(dish._id); // Enter edit mode
+                    }
+                  }} >{editDish === dish._id ? "Save" : "EditDish"}</button>
+                  {editDish === dish._id ? <button className='fit' onClick={() => {
+                    if (editDish === dish._id) {
+                      setEditDish(null)
+                    }
+                  }}  >Cancel</button> : <></>}
+                </div>
+
+
+              )
 
             )
+            )
+          }
 
-          )
-            ) 
-              }
 
-              {/* <div className="newDishContainer">
-               
-                {
-                  isNewDish?<div className="newDish">
-                      <label htmlFor="itemId">ItemId</label>
-                <input id="itemId" type='number' name="itemId" value={newdish?.itemId} onChange={handleNewDishChange} />
-                      <label htmlFor="itemId">Name</label>
-                <input id="newName" name="name"  type='text' value={newdish?.name} onChange={handleNewDishChange} />
-                      <label htmlFor="newDescription">Description</label>
-                <input  name="description"  id="description" type='text' value={newdish?.description} onChange={handleNewDishChange} /> */}
-                      {/* <label htmlFor="">ItemId</label>
-                <input id="" type='number' name='i'  value={newdish?.ingredients} onChange={handleNewDishChange} /> */}
-                  {/* </div>:<></> */}
-                {/* }
 
-               
 
-<button className='add-dish-button' onClick={()=>{
-  console.log("new dish", newdish);
-  createDish(newdish);
-  console.log("create dish")
-  setIsNewDish(!isNewDish)}} >{isNewDish?(<>Create</>):( <><img src="/plus.svg" alt="plus-sign" /> Add New Dish</>)}</button>
-{isNewDish?<button>Cancel</button>:<></>}
-              </div> */}
+          <div className="newDishContainer">
+
+            {
+              isNewDish ? <div className="newDish">
+                {/* <label htmlFor="itemId">ItemId</label>
+               <input id="itemId" name="itemId" type='number' value={newdish?.itemId} onChange={handleNewDishChange} /> */}
+
+                <label htmlFor="name">Name</label>
+                <input id="newName" name="name" type='text' value={newDish?.name} onChange={handleNewDishChange} />
+                <label htmlFor="newDescription">Description</label>
+                <input name="description" id="description" type='text' value={newDish?.description} onChange={handleNewDishChange} />
+                <label htmlFor="itemId"> ItemId</label>
+                <p id='itemId-warningText'>(ItemId should be unique)</p>
+                <input id="itemId" type='number' name='itemId' value={newDish?.ingredients} onChange={handleNewDishChange} />
+
+
+              </div> : <></>
+            }
+
+            {console.log("description", newDish.description)}
+
+
+            <div className="newDishEditButtons">
+              <button className='add-dish-button' onClick={(e) => {
+                //  createDish(newdish);
+
+                if (isNewDish) {
+                  if (newDish.itemId <= 0) {
+                    toast.error("enter a valid itemId, itemId cannot be 0 or negative");
+                    return
+                  }
+
+
+                  createDish(newDish)
+                }
+
+                setIsNewDish(!isNewDish)
+                console.log(isNewDish)
+
+                e.preventDefault();
+
+                console.log("create dish", newDish)
+
+              }}
+              >{isNewDish ? (<>Create</>) : (<><img src="/plus.svg" alt="plus-sign" /> Add New Dish</>)}</button>
+              {isNewDish ? <button onClick={() => setIsNewDish(!isNewDish)} >Cancel</button> : <></>}
+            </div>
+
+          </div>
+
         </div>
-      
-        </div>
-        
-      </>
 
-    )
-  }
+      </div>
 
-  export default Dashboard;
+    </>
+
+
+  )
+}
+
+
+export default Dashboard;

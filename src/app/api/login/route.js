@@ -21,8 +21,8 @@ console.log("tokenToVerify---",tokenToVerify);
     try {
       const decoded = jwt.verify(tokenToVerify, process.env.JWT_SECRET); // Verify the token
 
-      console.log("decoded", decoded)
-      return NextResponse.redirect(new URL('/dashboard', request.url));
+      console.log("decoded-login", decoded)
+      return NextResponse.json({success:true}, {status:200});
 
     } catch (err) {
       return NextResponse.json({ message: "Invalid or expired token", success: false }, { status: 401 });
