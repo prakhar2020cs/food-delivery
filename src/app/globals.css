@@ -282,3 +282,143 @@ button:disabled {
     /* align-items: center; */
     justify-content: center;
   }
+
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+:root{
+    --primary-bg:antiquewhite;
+}
+
+*{
+    margin: 0;
+    padding: 0; 
+    transition: all .3s;
+
+  
+}
+h2,h1{
+    text-align: center;
+}
+
+body{
+   
+    font-family: 'Roboto';
+    font-style: normal;
+   
+}
+
+.restaurant-container{
+    display: flex
+    ;
+        flex-direction: column;
+        /* align-items: center; */
+        gap: 10px
+}
+.dashboard-container{
+    margin-top: 20px;
+}
+
+.dashboard-container h3{
+    text-align: center;
+    margin-bottom: 10px;
+    /* margin-inline: auto; */
+}
+.dashboard-container h2{
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+
+button.loginSignup{
+    margin-inline: auto;
+}
+
+a{
+
+    text-decoration: none;
+}
+a, button{
+    cursor: pointer;
+    color: white;
+    padding: 10px;
+    border-radius: 12px;
+    background-color: brown;
+}
+input{
+    padding: 10px;
+}
+.userDetail{
+    display: flex
+    ;
+        flex-direction: column;
+        gap: 10px;
+        max-width: 60%;
+        MARGIN-INLINE: auto;
+        margin-bottom: 30px;
+}
+
+.dishes{
+    display: flex
+    ;
+    flex-direction: column;
+    gap: 5px;
+    justify-content: space-between;
+    background-color: rgb(218, 94, 94);
+    border: 1px solid black;
+    padding: 10px;
+    border-radius: 12px;
+    /* margin-bottom: 10px; */
+
+    max-width: fit-content;
+
+}
+
+.userDishes{
+    padding: 10px;
+    background-color: rgb(221, 111, 111);
+    display: flex;
+    flex-wrap: wrap;
+    border: 1px soid rgb(197, 66, 66);
+    border-radius: 12px;
+    justify-content: space-evenly;
+    /* gap: 10px; */
+}
+
+.newDishContainer{
+    display: flex
+    ;
+    flex-direction: column;
+   gap: 5px;
+}
+.newDish{
+    display: flex
+    ;
+    flex-direction: column;
+}
+
+.add-dish-button{
+    background-color: aquamarine;
+    display: flex;
+    align-items: center;
+   justify-content: center;
+}
+
+
+
+.forgot-form{
+    color: #fff;
+    border: 2px solid rgb(147, 16, 16);
+    border-radius:12px;
+    margin-top: 100px;
+ margin-inline: auto;
+    padding: 10px;
+    background-color: rgb(192, 92, 92);
+    max-width: 50%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+button:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }

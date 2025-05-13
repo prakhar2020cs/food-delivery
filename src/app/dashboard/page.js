@@ -201,7 +201,7 @@ const [uploadVisible, setUploadVisible] = useState(false);
     const res = await fetch("api/crud/user/dishes", {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ _id: dish._id, itemId: dish.itemId, name: dish.name, description: dish.description }),
+      body: JSON.stringify({ _id: dish._id, name: dish.name, description: dish.description }),
     });
 
     let updatedDish = await res.json();
@@ -213,8 +213,8 @@ const [uploadVisible, setUploadVisible] = useState(false);
 
   function validateDish(d) {
     console.log("d", d)
-    if (!d.itemId || !d.name) {
-      setDishValidateMessage("must provide a name and unique ItemId to a dish")
+    if (!d.name || !d.description ) {
+      setDishValidateMessage("must provide a name and description to a dish")
       return false
     }
 
@@ -235,7 +235,7 @@ const [uploadVisible, setUploadVisible] = useState(false);
     const res = await fetch("/api/crud/user/dishes", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ itemId: dish.itemId, email: email, name: dish.name, description: dish.description }),
+      body: JSON.stringify({ email: email, name: dish.name, description: dish.description }),
     });
 
     let newDish = await res.json();
@@ -488,9 +488,9 @@ const [uploadVisible, setUploadVisible] = useState(false);
                 <input id="newName" name="name" type='text' value={newDish?.name} onChange={handleNewDishChange} />
                 <label htmlFor="newDescription">Description</label>
                 <input name="description" id="description" type='text' value={newDish?.description} onChange={handleNewDishChange} />
-                <label htmlFor="itemId"> ItemId</label>
-                <p id='itemId-warningText'>(ItemId should be unique)</p>
-                <input id="itemId" type='number' name='itemId' value={newDish?.ingredients} onChange={handleNewDishChange} />
+                {/* <label htmlFor="itemId"> ItemId</label> */}
+                {/* <p id='itemId-warningText'>(ItemId should be unique)</p>
+                <input id="itemId" type='number' name='itemId' value={newDish?.ingredients} onChange={handleNewDishChange} /> */}
 
 
               </div> : <></>
@@ -504,10 +504,7 @@ const [uploadVisible, setUploadVisible] = useState(false);
                 //  createDish(newdish);
 
                 if (isNewDish) {
-                  if (newDish.itemId <= 0) {
-                    toast.error("enter a valid itemId, itemId cannot be 0 or negative");
-                    return
-                  }
+               
 
 
                   createDish(newDish)
