@@ -114,6 +114,7 @@ input{
 }
 
 .dishes, .newDish{
+    max-width:200px;
     box-shadow:-6px 6px 6px rgba(255, 255, 255, 0.6);
     display: flex
     ;
@@ -124,9 +125,7 @@ input{
     border: 1px solid black;
     padding: 10px;
     border-radius: 12px;
-    /* margin-bottom: 10px; */
 
-    max-width: fit-content;
 
 }
 
