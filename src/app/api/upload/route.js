@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import { restaurantSchema } from "@/models/restaurant"; // adjust path
-import dbConnect from "@/lib/dbConnect";
+import { restaurantSchema } from "/src/app/lib/restaurantsModel"; // adjust path
+import dbConnect from "/src/app/lib/dbConnect";
 
 export async function POST(req) {
   try {
