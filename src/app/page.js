@@ -60,7 +60,7 @@ fetchDishes()
 {
  gotDishes? gotDishes.map(
     (dish)=>(
-  <div className="" key = {dish._id}>
+  <div className={style.searchedDishes} key = {dish._id}>
     <h3>{dish.name}</h3>
     <p>{dish.description}</p>
   </div>
