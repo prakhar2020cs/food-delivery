@@ -1,4 +1,4 @@
-// import mongoose from "mongoose";
+import mongoose from "mongoose";
 import dishSchema from "/src/app/lib/dishesModel";
 import { NextResponse } from "next/server";
 // import { connectionStr } from "@/app/lib/db";
@@ -26,10 +26,10 @@ await dbConnect();
  
     try {
   
-  const { email, name, description} = await req.json();
+  const {id , email, name, description} = await req.json();
 
       const dishes = await dishSchema.findOneAndUpdate(
-        {email},
+        { _id: new mongoose.Types.ObjectId(id) },
         { name, description},
         {new:true}
       );
@@ -94,9 +94,11 @@ console.log("--new dish", newDish);
         if (!itemId) {
           return NextResponse.json({ message: "itemId is required" }, { status: 400 });
         }
+
+       const id = new mongoose.Types.ObjectId(itemId)
     
         // Find and delete the dish
-        const deletedDish = await dishSchema.findOneAndDelete({itemId});
+        const deletedDish = await dishSchema.findOneAndDelete({_id:id});
     
         // Check if the dish was found and deleted
         if (!deletedDish) {
