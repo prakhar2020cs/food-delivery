@@ -18,8 +18,8 @@ export default function Upload({ handleSetProfile, setUpload, email }) {
 
       setFileUrl(uploadedUrl); // Show image
 
-      // Step 2: Save to MongoDB via API
-      const saveRes = await fetch("/api/save-profile-url", {
+ 
+      const saveRes = await fetch("/api/upload", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
