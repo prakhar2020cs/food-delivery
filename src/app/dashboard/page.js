@@ -201,7 +201,7 @@ const [uploadVisible, setUploadVisible] = useState(false);
     const res = await fetch("api/crud/user/dishes", {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ _id: dish._id, name: dish.name, description: dish.description }),
+      body: JSON.stringify({ id: dish._id, name: dish.name, description: dish.description }),
     });
 
     let updatedDish = await res.json();
@@ -249,11 +249,11 @@ const [uploadVisible, setUploadVisible] = useState(false);
 
   const deleteDish = async (dish) => {
     console.log("deletedish-itemId", dish.itemId)
-    console.log("deleteUser");
+    console.log("deleteUser", dish._id);
     const res = await fetch("/api/crud/user/dishes", {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ itemId: dish.itemId }),
+      body: JSON.stringify({ itemId: dish._id }),
     });
 
     //   setDishes((currentDishes) => 
@@ -284,14 +284,15 @@ const [uploadVisible, setUploadVisible] = useState(false);
         <h3>User Details</h3>
         <div className="userDetail">
           {console.log("email-dashboard",email)}
-{/* local upload */}
+{/* local upload 
 <div className="visibility" style={{display:uploadVisible?"block":"none"}}>
   <UploadPage email={email} handleSetProfile={handleSetProfile} /> 
-</div>
+  </div>
+  */}
 
 
 {/* edge store upload */}
-          {/* {upload ? <Upload handleSetProfile={handleSetProfile} setUpload={setUpload}/> : <></>} */}
+          {upload ? <Upload handleSetProfile={handleSetProfile} setUpload={setUpload}/> : <></>}
           {imageUrl?<img className='new-profile-pic' src={imageUrl?imageUrl:"#"} alt="profile-pic" />:
           <p>Loading...</p>
           }
@@ -430,7 +431,7 @@ const [uploadVisible, setUploadVisible] = useState(false);
 
                   </>) : (<>
 
-                    <p>Item Id:{dish.itemId}</p>
+                    {/* <p>Item Id:{dish.itemId}</p> */}
                     <p>Name: {dish.name}</p>
                     <p>Description: {dish.description}</p>
                     {/* <p>Ingredients: {dish.ingredients.join(', ')}</p> */}
@@ -438,14 +439,13 @@ const [uploadVisible, setUploadVisible] = useState(false);
 
                   <button className='fit' onClick={() => {
 
-                    console.log("itemId", dish.itemId)
+                  
 
-                    if (dish.itemId) {
+                  
                       deleteDish(dish)
-                      console.log("inside if")
-                    }
+                
 
-                    console.log("no dish matching item id");
+                  
 
 
 
