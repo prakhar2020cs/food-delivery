@@ -1,115 +1,115 @@
-// import mongoose from "mongoose";
-import dishSchema from "/src/app/lib/dishesModel";
+import dishSchema from "@/models/Dish";
 import { NextResponse } from "next/server";
-// import { connectionStr } from "@/app/lib/db";
-import { dbConnect } from "@/app/lib/dbConnect";
+import { dbConnect } from "@/lib/dbConnect";
 
 export async function GET(req) {
 
   await dbConnect();
 
-    try {
-     
-  const email = req.headers.get('email');
-  console.log("email---",email)
-      const dishes = await dishSchema.find({email});
-      return NextResponse.json(dishes, { status: 200 });
-    } catch (error) {
-      return NextResponse.json({ message: "Error fetching dishes", error }, { status: 500 });
-    }
+  try {
+
+    const email = req.headers.get('email');
+    console.log("email---", email)
+    const dishes = await dishSchema.find({ email });
+    return NextResponse.json(dishes, { status: 200 });
+  } catch (error) {
+    return NextResponse.json({ message: "Error fetching dishes", error }, { status: 500 });
   }
+}
 
 export async function PUT(req) {
 
-await dbConnect();
-
- 
-    try {
-  
-  const { email, name, description} = await req.json();
-
-      const dishes = await dishSchema.findOneAndUpdate(
-        {email},
-        { name, description},
-        {new:true}
-      );
-      return NextResponse.json({dishes, success: true} ,{ status: 200 });
-    } catch (error) {
-      return NextResponse.json({ message: "Error fetching dishes", error }, { status: 500 });
-    }
-  }
-
-  export async function POST(req) {
-
- 
+  await dbConnect();
 
 
-await dbConnect();
-
-
-console.log("Received POST request");
-const data = await req.json();
-console.log("Received data:", data);
-console.log(data.email)
-if(!data.name){
   try {
-    const dishes = await dishSchema.find({email})
-    ;
+
+    const { _id, name, description } = await req.json();
+
+    const dishes = await dishSchema.findOneAndUpdate(
+      {_id},
+      { name, description },
+      { new: true }
+    );
+
     console.log("dishes---", dishes);
-    return NextResponse.json({dishes , success:true},{status:200});
+    return NextResponse.json({ dishes, success: true }, { status: 200 });
   } catch (error) {
-    return NextResponse.json({message: "error getting dishes" , success:false},{status:500})
+    return NextResponse.json({ message: "Error fetching dishes", error }, { status: 500 });
   }
- 
-
-
 }
 
-      try {
-      
-   console.log("--new dish----")
-let newDish = data;
-console.log("--new dish", newDish);
+export async function POST(req) {
+
+
+
+
+  await dbConnect();
+
+
+  console.log("Received POST request");
+  const data = await req.json();
+  console.log("Received data:", data);
+  console.log(data.email)
+  if (!data.name) {
+    try {
+      const dishes = await dishSchema.find({ email })
+        ;
+      console.log("dishes---", dishes);
+      return NextResponse.json({ dishes, success: true }, { status: 200 });
+    } catch (error) {
+      return NextResponse.json({ message: "error getting dishes", success: false }, { status: 500 })
+    }
+
+
+
+  }
+
+  try {
+
+    console.log("--new dish----")
+    let newDish = data;
+    console.log("--new dish", newDish);
     let dish = new dishSchema(newDish);
-  
+
     const result = await dish.save();
     console.log("new saved dish", result);
-       
-        return NextResponse.json({result, success: true} ,{ status: 200 });
-      } catch (error) {
-        console.log(error);
-        return NextResponse.json({ message: "Error creating dishes", error }, { status: 500 });
-      }
-    }
+
+    return NextResponse.json({ result, success: true }, { status: 200 });
+  } catch (error) {
+    console.log(error);
+    return NextResponse.json({ message: "Error creating dishes", error }, { status: 500 });
+  }
+}
 
 
-    export async function DELETE(req) {
-      await dbConnect();
-    
-      try {
-        const { itemId } = await req.json(); // Get itemId from the request body
-        console.log("Deleting dish with itemId:", itemId);
-    
-        // Check if itemId is provided
-        if (!itemId) {
-          return NextResponse.json({ message: "itemId is required" }, { status: 400 });
-        }
-    
-        // Find and delete the dish
-        const deletedDish = await dishSchema.findOneAndDelete({itemId});
-    
-        // Check if the dish was found and deleted
-        if (!deletedDish) {
-          return NextResponse.json({ message: "Dish not found" }, { status: 404 });
-        }
-    
-        return NextResponse.json({ message: "Dish deleted successfully", deletedDish }, { status: 200 });
-      } catch (error) {
-        console.error("Error deleting dish:", error);
-        return NextResponse.json({ message: "Error deleting dish", error }, { status: 500 });
-      }
+export async function DELETE(req) {
+  await dbConnect();
+
+  try {
+    const { itemId } = await req.json(); // Get itemId from the request body
+    console.log("Deleting dish with itemId:", itemId);
+
+    // Check if itemId is provided
+    if (!itemId) {
+      return NextResponse.json({ message: "itemId is required" }, { status: 400 });
     }
-  
+
+    // Find and delete the dish
+    const deletedDish = await dishSchema.findOneAndDelete({ itemId });
+
+    // Check if the dish was found and deleted
+    if (!deletedDish) {
+      return NextResponse.json({ message: "Dish not found" }, { status: 404 });
+    }
+
+    return NextResponse.json({ message: "Dish deleted successfully", deletedDish }, { status: 200 });
+  } catch (error) {
+    console.error("Error deleting dish:", error);
+    return NextResponse.json({ message: "Error deleting dish", error }, { status: 500 });
+  }
+}
+
 
 
 //   try{

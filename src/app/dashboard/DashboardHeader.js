@@ -1,113 +1,65 @@
 "use client"
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import style from "./DashboardHeader.module.css";
 import Cookies from 'js-cookie';
 
-
-
-
-
-
-
 const DashboardHeader = () => {
- 
-let [userDetails, setUserDetails] = useState("");
-
+  const [userDetails, setUserDetails] = useState("");
   const router = useRouter();
-  // const pathName = usePathname();
- 
 
-let tokenToVerify = null;
-
-
-
-
-useEffect(
-  ()=>{
-
-    let token = Cookies.get("token");
+  useEffect(() => {
+    const token = Cookies.get("token");
     if (!token) {
       router.push("/restaurant");
       return;
     }
-   tokenToVerify = token;
-   console.log("dashboard header token useeffect----", token)
 
-    async function checkToken () {
-      if(!tokenToVerify){
+    async function checkToken() {
+      try {
+        const tokenVerify = await fetch("/api/login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,
+          },
+        });
+
+        const res = await tokenVerify.json();
+        if (!res.success) {
+          router.push("/restaurant");
+        }
+      } catch (error) {
+        console.error("Dashboard Header Auth Error:", error);
         router.push("/restaurant");
       }
-
-      console.log("check token-dashboarHeader", tokenToVerify)
-     
-     let tokenVerify = await fetch("/api/login",
-      {
-        method: "POST",
-      headers: { "Content-Type": "application/json", "Authorization": `Bearer ${tokenToVerify}`,},
-     
-      
-      }
-     );
-    
-      let res = await tokenVerify.json();
-      console.log("dashboard-header use effect",res)
-  
-// console.log("dashboard-header use effect",res)
-      if (res.success) {
-        console.log("user token is valid");
-
-       
-      }else{
-        router.push("/restaurant")
-      }
-
     }
 
-    checkToken()
-  }
-,[])
-
-
+    checkToken();
+  }, [router]);
 
   const logout = () => {
-    // localStorage.removeItem("registeredUser");
-
     setUserDetails('');
-    Cookies.remove("token",  { path: "/" });
-    console.log("logout");
-    setTimeout(() => {
-      router.push("/restaurant");
-  }, 100);
+    Cookies.remove("token", { path: "/" });
+    router.push("/restaurant");
+  };
 
-
-    // router.push("/restaurant");
-
-  }
-  return (<>
-    {console.log("restaurant header2")}
-    <div className="header">
-      <Link href="#" className={style.logo}>
-        <img src="delivery-boy-logo.webp" alt="" /><span>FoodZilla</span>
+  return (
+    <header className={style.header}>
+      <Link href="/dashboard" className={style.logo}>
+        <img src="delivery-boy-logo.webp" alt="FoodZilla Logo" />
+        <span>FoodZilla</span>
       </Link>
-      <div className="headerRight">
-        {/* <Link href="/restaurant">Home</Link> */}
 
-
-        {/* <Link  href="#" >Profile</Link> */}
-        <Link href="#" onClick={logout} >Logout</Link>
-
-
-
-
-
+      <div className={style.headerRight}>
+        <Link href="/dashboard">Dashboard</Link>
+        <button className={style.logoutBtn} onClick={logout}>
+          Logout
+        </button>
       </div>
-    </div>
-
-  </>
-  )
-
+    </header>
+  );
 }
 
 export default DashboardHeader;

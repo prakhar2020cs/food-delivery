@@ -1,27 +1,37 @@
-
 'use client'
 
-const { useState } = require("react")
+import { useState } from "react";
+import RestaurantFooter from "@/components/RestaurantFooter";
+import RestaurantHeader from "@/components/RestaurantHeader";
+import Login from "@/components/restaurantLogin";
+import Signup from "@/components/restaurantSignUp";
+import styles from './restaurant.module.css';
 
-import RestaurantFooter from "../_component/RestaurantFooter";
-import RestaurantHeader from "../_component/RestaurantHeader";
-import Login from "../_component/restaurantLogin";
-import Signup from "../_component/restaurantSignUp";
+const Restaurant = () => {
+    const [login, setLogin] = useState(true);
 
-const restaurant = () =>{
-    const [login ,setLogin] = useState(true);
+    return (
+        <div className={styles.pageWrapper}>
+            <RestaurantHeader setLogin={setLogin} login={login} />
 
+            <main className={styles.mainContent}>
+                <div className={styles.authCard}>
+                    <div className={styles.titleSection}>
+                        <h1>{login ? "Welcome Back" : "Join FoodZilla"}</h1>
+                        <p>{login ? "Manage your restaurant menu and orders." : "Sign up your restaurant and reach more customers."}</p>
+                    </div>
 
+                    {login ? <Login /> : <Signup setLogin={setLogin} />}
 
-    return(
-        <div className="restaurant-container">
-        <RestaurantHeader setLogin = {setLogin} login = {login}/>
-        <h1>Restaurant</h1>
-     
-        {login? <Login  />: <Signup setLogin={setLogin} />}
-        <button className="loginSignup"  onClick={()=>setLogin(!login)}>{login?"Do not have account? Signup":"Already have an account? login "}</button>
-<RestaurantFooter/>
+                    <button className={styles.toggleBtn} onClick={() => setLogin(!login)}>
+                        {login ? "New here? Create your restaurant account" : "Already registered? Sign in here"}
+                    </button>
+                </div>
+            </main>
+
+            <RestaurantFooter />
         </div>
     )
 }
-export default restaurant;
+
+export default Restaurant;

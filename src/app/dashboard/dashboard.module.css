@@ -1,0 +1,261 @@
+.dashboardContainer {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 20px;
+    font-family: 'Inter', sans-serif;
+    color: #1f2937;
+}
+
+.welcomeSection {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.welcomeSection h2 {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: #b91c1c;
+    margin-bottom: 8px;
+}
+
+.sectionTitle {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 40px 0 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #fee2e2;
+}
+
+/* User Details Card */
+.detailsCard {
+    background: white;
+    border-radius: 20px;
+    padding: 32px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    display: flex;
+    gap: 40px;
+    border: 1px solid #fee2e2;
+    margin-bottom: 40px;
+}
+
+.profileSection {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    min-width: 200px;
+}
+
+.profilePic {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid #fff1f2;
+    box-shadow: 0 4px 12px rgba(220, 38, 38, 0.1);
+}
+
+.uploadBtn {
+    background: #fff1f2;
+    color: #dc2626;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.uploadBtn:hover {
+    background: #ffe4e6;
+}
+
+.infoGrid {
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+}
+
+.infoItem {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.infoLabel {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #9ca3af;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.infoValue {
+    font-size: 1.125rem;
+    font-weight: 500;
+    color: #111827;
+}
+
+.actionButtons {
+    display: flex;
+    gap: 12px;
+    margin-top: 24px;
+}
+
+/* Dish Grid */
+.dishGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 24px;
+}
+
+.dishCard {
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+    border: 1px solid #f3f4f6;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    transition: all 0.2s;
+}
+
+.dishCard:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 25px rgba(220, 38, 38, 0.08);
+    border-color: #fca5a5;
+}
+
+.dishHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.dishId {
+    font-size: 0.75rem;
+    color: #9ca3af;
+    font-family: monospace;
+}
+
+.dishName {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #111827;
+}
+
+.dishDesc {
+    color: #4b5563;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    flex: 1;
+}
+
+.dishActions {
+    display: flex;
+    gap: 8px;
+    margin-top: 16px;
+}
+
+/* Shared Buttons */
+.btn {
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.875rem;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s;
+}
+
+.btnPrimary {
+    background: #dc2626;
+    color: white;
+}
+
+.btnPrimary:hover {
+    background: #b91c1c;
+}
+
+.btnSecondary {
+    background: #4b5563;
+    color: white;
+}
+
+.btnSecondary:hover {
+    background: #374151;
+}
+
+.btnDanger {
+    background: #ef4444;
+    color: white;
+}
+
+.btnDanger:hover {
+    background: #b91c1c;
+}
+
+.btnOutline {
+    background: transparent;
+    border: 1px solid #fca5a5;
+    color: #b91c1c;
+}
+
+.btnOutline:hover {
+    background: #fff1f2;
+}
+
+.addDishBtn {
+    background: #059669;
+    color: white;
+    width: 100%;
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.addDishBtn:hover {
+    background: #047857;
+}
+
+.input {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #fee2e2;
+    background: #fff;
+    font-size: 1rem;
+    color: #1f2937;
+    transition: all 0.2s;
+    font-family: inherit;
+    margin: 8px 0;
+}
+
+.input:focus {
+    outline: none;
+    border-color: #dc2626;
+    box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+}
+
+textarea.input {
+    min-height: 100px;
+    resize: vertical;
+}
+
+@media (max-width: 768px) {
+    .detailsCard {
+        flex-direction: column;
+        align-items: center;
+        padding: 24px;
+    }
+
+    .infoGrid {
+        grid-template-columns: 1fr;
+        width: 100%;
+    }
+}

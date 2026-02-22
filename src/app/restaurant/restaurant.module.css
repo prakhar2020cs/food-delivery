@@ -1,0 +1,87 @@
+.pageWrapper {
+    min-height: 100vh;
+    background: #fffafa;
+    display: flex;
+    flex-direction: column;
+}
+
+.mainContent {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 20px;
+}
+
+.authCard {
+    background: white;
+    border-radius: 24px;
+    padding: 48px;
+    box-shadow: 0 20px 50px rgba(220, 38, 38, 0.08);
+    width: 100%;
+    max-width: 550px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    border: 1px solid rgba(220, 38, 38, 0.1);
+}
+
+.titleSection {
+    text-align: center;
+    margin-bottom: 8px;
+}
+
+.titleSection h1 {
+    font-size: 2.25rem;
+    font-weight: 800;
+    color: #b91c1c;
+    margin-bottom: 8px;
+}
+
+.titleSection p {
+    color: #6b7280;
+    font-size: 1.1rem;
+}
+
+.toggleBtn {
+    background: #fff1f2;
+    border: 1px solid #fecaca;
+    color: #dc2626;
+    padding: 14px 24px;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    width: 100%;
+    margin-top: 12px;
+}
+
+.toggleBtn:hover {
+    background: #ffe4e6;
+    color: #b91c1c;
+}
+
+.divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    color: #fca5a5;
+    font-size: 0.875rem;
+    margin: 8px 0;
+}
+
+.divider::before,
+.divider::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid #fee2e2;
+}
+
+.divider:not(:empty)::before {
+    margin-right: 1em;
+}
+
+.divider:not(:empty)::after {
+    margin-left: 1em;
+}

@@ -1,55 +1,34 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { toast ,ToastContainer} from "react-toastify";
+import { toast } from "react-toastify";
 
-
-
-export default function UploadPage({email, handleSetProfile}) {
-    const [uploadedFile, setUploadedFile] = useState(null);
-
-    // for
+export default function UploadPage({ email, handleSetProfile }) {
+  const [uploadedFile, setUploadedFile] = useState(null);
   const [file, setFile] = useState(null);
-  // const [profile, setProfile] = useState(null);
-  useEffect(()=>{
-    const getImageUrl = async()=>{
-      console.log("email before fetch-upload local", email)
-      const res = await fetch("/api/upload",{
-        method:"GET",
-        headers:{
-          "email":email
-        }
-       })
-    
-   console.log( "response",res);
-   const urldata = await res.json();
 
-
-       if( urldata.success){
-        console.log("upload-local,use-effect, urldata", urldata.url)
+  useEffect(() => {
+    const getImageUrl = async () => {
+      if (!email) return;
+      const res = await fetch("/api/upload", {
+        method: "GET",
+        headers: { "email": email }
+      });
+      const urldata = await res.json();
+      if (urldata.success) {
         setUploadedFile(urldata.url);
-    handleSetProfile(urldata.url)
-
-    showMessage("Image Fetched Successfully");
-       }else{
-        showMessage("no image fetched")
-       }
-
-     
-    }
-
+        handleSetProfile(urldata.url);
+      }
+    };
     getImageUrl();
-
-
-  }, [email])
+  }, [email]);
 
   const handleUpload = async () => {
     if (!file) return toast.error("Please select a file!");
 
     const formData = new FormData();
-    console.log("email",email)
     formData.append("file", file);
-    formData.append("email",email )
+    formData.append("email", email);
 
     const response = await fetch("/api/upload", {
       method: "POST",
@@ -57,33 +36,35 @@ export default function UploadPage({email, handleSetProfile}) {
     });
 
     const data = await response.json();
-
-
-    if(data.success){
-      console.log("uploaded-file", data.url)
+    if (data.success) {
       setUploadedFile(data.url);
       handleSetProfile(data.url);
-
-      toast.success("image uploaded successfully");
-  
+      toast.success("Image uploaded successfully");
+    } else {
+      toast.error("Upload failed");
     }
-    
   };
 
   return (
-
-    <div>
-      <div id="message-box" style={{ display: "none", padding: "10px", background: "lightgreen", color: "black" }}></div>
-
-      <h2>Upload using local</h2>
-      <ToastContainer/>
+    <div style={{ marginTop: '16px', padding: '16px', border: '1px dashed #d1d5db', borderRadius: '8px' }}>
+      <p style={{ fontSize: '0.875rem', color: '#6b7280', marginBottom: '8px' }}>Upload a new profile picture</p>
       <input
         type="file"
+        style={{ fontSize: '0.875rem', marginBottom: '12px', display: 'block', width: '100%' }}
         onChange={(e) => setFile(e.target.files[0])}
       />
-      <button onClick={handleUpload}>Upload</button>
-      {uploadedFile && <img src={uploadedFile} alt="Uploaded" width="200" />}
-
+      <button
+        style={{ background: '#3b82f6', color: 'white', border: 'none', padding: '6px 12px', borderRadius: '4px', cursor: 'pointer', fontSize: '0.875rem' }}
+        onClick={handleUpload}
+      >
+        Upload Now
+      </button>
+      {uploadedFile && (
+        <div style={{ marginTop: '12px' }}>
+          <p style={{ fontSize: '0.75rem', color: '#10b981' }}>Preview:</p>
+          <img src={uploadedFile} alt="Uploaded" width="64" height="64" style={{ borderRadius: '50%', objectFit: 'cover', marginTop: '4px' }} />
+        </div>
+      )}
     </div>
   );
 }

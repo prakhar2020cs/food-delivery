@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 import fs from "fs";
 import path from "path";
-import { dbConnect } from "@/app/lib/dbConnect";
-import { restaurantSchema } from "@/app/lib/restaurantsModel";
+import { dbConnect } from "@/lib/dbConnect";
+import restaurantSchema from "@/models/Restaurant";
 
 export async function POST(req) {
     const formData = await req.formData();

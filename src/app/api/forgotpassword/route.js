@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import { connectionStr } from "@/app/lib/db";
-import { restaurantSchema } from "@/app/lib/restaurantsModel";
+import { connectionStr } from "@/lib/db";
+import restaurantSchema from "@/models/Restaurant";
 import mongoose from "mongoose";
 import jwt from 'jsonwebtoken';
 import { sendEmail } from "@/app/utils/sendEmail";
@@ -20,7 +20,7 @@ export async function POST(req) {
       return NextResponse.json({ message: "user not found", success: "false" });
     }
 
-     forgetpasswordtoken = jwt.sign(
+    forgetpasswordtoken = jwt.sign(
       { email: user.email },
       process.env.JWT_SECRET, // Secret from environment variables
       { expiresIn: '1h' }
@@ -45,7 +45,7 @@ export async function POST(req) {
     console.log("inside email try")
 
     const resetLink = `http://localhost:3000/resetpassword/${forgetpasswordtoken}`;
-  
+
     const emailResponse = await sendEmail(
       {
         to: email,
