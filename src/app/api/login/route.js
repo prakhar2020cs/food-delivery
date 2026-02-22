@@ -8,20 +8,16 @@ import { dbConnect } from '@/lib/dbConnect';
 export async function POST(request) {
 
 
-  console.log("request data", request)
 
 
   const authHeader = request.headers.get("Authorization");
-  console.log("auth", authHeader);
   const tokenToVerify = authHeader?.split(" ")[1];
-  console.log("tokenToVerify---", tokenToVerify);
   // If a token is provided, verify it
   if (tokenToVerify) {
     console.log("token", tokenToVerify)
     try {
       const decoded = jwt.verify(tokenToVerify, process.env.JWT_SECRET); // Verify the token
 
-      console.log("decoded-login", decoded)
       return NextResponse.json({ success: true }, { status: 200 });
 
     } catch (err) {

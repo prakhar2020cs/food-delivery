@@ -22,9 +22,7 @@
     font-size: 3rem;
     font-weight: 800;
     margin-bottom: 16px;
-    background: linear-gradient(135deg, #b91c1c 0%, #dc2626 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    color: #b91c1c;
 }
 
 .lead {
@@ -75,7 +73,7 @@
 
 .grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    grid-template-columns: repeat(3, 1fr);
     gap: 32px;
 }
 
