@@ -27,8 +27,7 @@ const Dashboard = () => {
   const [newDish, setNewDish] = useState({
     email: "",
     name: "",
-    description: "",
-    itemId: ""
+    description: ""
   });
   const [uploadVisible, setUploadVisible] = useState(false);
   const [imageUrl, setImageUrl] = useState(null);
@@ -155,7 +154,7 @@ const Dashboard = () => {
       toast.success("Dish Created");
       setRender(!render);
       setIsNewDish(false);
-      setNewDish({ email: "", name: "", description: "", itemId: "" });
+      setNewDish({ email: "", name: "", description: "" });
     } else {
       toast.error("Error creating dish");
     }
@@ -165,7 +164,7 @@ const Dashboard = () => {
     const res = await fetch("/api/crud/user/dishes", {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ itemId: dish.itemId }),
+      body: JSON.stringify({ id: dish._id }),
     });
     setRender(!render);
     toast.success("Dish Deleted");
@@ -261,7 +260,7 @@ const Dashboard = () => {
                 ) : (
                   <h4 className={styles.dishName}>{dish.name}</h4>
                 )}
-                <span className={styles.dishId}>ID: {dish.itemId}</span>
+                <span className={styles.dishId}>ID: {dish._id}</span>
               </div>
 
               {editDish === dish._id ? (

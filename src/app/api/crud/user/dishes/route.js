@@ -27,7 +27,7 @@ export async function PUT(req) {
     const { _id, name, description } = await req.json();
 
     const dishes = await dishSchema.findOneAndUpdate(
-      {_id},
+      { _id },
       { name, description },
       { new: true }
     );
@@ -87,16 +87,16 @@ export async function DELETE(req) {
   await dbConnect();
 
   try {
-    const { itemId } = await req.json(); // Get itemId from the request body
-    console.log("Deleting dish with itemId:", itemId);
+    const { id } = await req.json(); // Get id from the request body
+    console.log("Deleting dish with id:", id);
 
-    // Check if itemId is provided
-    if (!itemId) {
-      return NextResponse.json({ message: "itemId is required" }, { status: 400 });
+    // Check if id is provided
+    if (!id) {
+      return NextResponse.json({ message: "id is required" }, { status: 400 });
     }
 
     // Find and delete the dish
-    const deletedDish = await dishSchema.findOneAndDelete({ itemId });
+    const deletedDish = await dishSchema.findByIdAndDelete(id);
 
     // Check if the dish was found and deleted
     if (!deletedDish) {
